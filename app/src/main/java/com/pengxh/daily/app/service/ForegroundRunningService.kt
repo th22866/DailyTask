@@ -7,27 +7,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
-import android.os.Message
+import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.utils.Constant
-import com.pengxh.kt.lite.utils.WeakReferenceHandler
 
 /**
  * APP前台服务，降低APP被系统杀死的可能性
  * */
-class ForegroundRunningService : Service(), Handler.Callback {
+class ForegroundRunningService : Service() {
 
     private val notificationId = 1
-    private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
+    private val updateHandler = Handler(Looper.getMainLooper())
     private var notificationManager: NotificationManager? = null
     private var notificationBuilder: NotificationCompat.Builder? = null
     private var runningTime = 0L
-    private lateinit var updateRunnable: Runnable
-
-    override fun handleMessage(msg: Message): Boolean {
-        return true
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -53,13 +47,13 @@ class ForegroundRunningService : Service(), Handler.Callback {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         //记录通知被创建的时间
         runningTime = System.currentTimeMillis()
-        updateRunnable = object : Runnable {
+        val updateRunnable = object : Runnable {
             override fun run() {
                 updateNotification()
-                weakReferenceHandler.postDelayed(this, 1000L * 60)
+                updateHandler.postDelayed(this, 1000L * 60)
             }
         }
-        weakReferenceHandler.post(updateRunnable)
+        updateHandler.post(updateRunnable)
         return START_STICKY
     }
 
@@ -76,7 +70,7 @@ class ForegroundRunningService : Service(), Handler.Callback {
 
     override fun onDestroy() {
         super.onDestroy()
-        weakReferenceHandler.removeCallbacksAndMessages(null)
+        updateHandler.removeCallbacksAndMessages(null)
         stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
