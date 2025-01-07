@@ -49,6 +49,18 @@ fun String.sendEmail(context: Context, title: String?, isTest: Boolean) {
             put("mail.smtp.starttls.required", true)
             put("mail.smtp.ssl.trust", "smtp.163.com") // 只信任163服务器
         }
+    } else if (config.emailSender.endsWith("@126.com")) {
+        pro.apply {
+            put("mail.smtp.starttls.enable", true)
+            put("mail.smtp.starttls.required", true)
+            put("mail.smtp.ssl.trust", "smtp.126.com") // 只信任126服务器
+        }
+    } else if (config.emailSender.endsWith("@yeah.net")) {
+        pro.apply {
+            put("mail.smtp.starttls.enable", true)
+            put("mail.smtp.starttls.required", true)
+            put("mail.smtp.ssl.trust", "smtp.yeah.net") // 只信任yeah服务器
+        }
     }
 
     val sendMailSession = Session.getDefaultInstance(pro, authenticator)
