@@ -29,16 +29,28 @@ fun String.sendEmail(context: Context, title: String?, isTest: Boolean) {
     /*****************************************************************************************/
     /*********************************发送邮件*************************************************/
     /*****************************************************************************************/
-    val authenticator = EmailAuthenticator(config.emailSender, config.permissionCode)
-    val pro = Properties().apply {
+    val authenticator = EmailAuthenticator(config.emailSender, config.authCode)
+    val pro = Properties()
+    pro.apply {
         put("mail.smtp.host", config.senderServer)
         put("mail.smtp.port", config.emailPort)
-        put("mail.smtp.auth", true)
-        put("mail.smtp.starttls.enable", true)
-        put("mail.smtp.starttls.required", true)
+        put("mail.smtp.auth", "true")
+        put("mail.smtp.ssl.checkserveridentity", "true")
         put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
-        put("mail.smtp.socketFactory.fallback", false)
     }
+    if (config.emailSender.endsWith("@qq.com")) {
+        pro.apply {
+            put("mail.smtp.ssl.enable", "true")
+            put("mail.smtp.socketFactory.port", "465")
+        }
+    } else if (config.emailSender.endsWith("@163.com")) {
+        pro.apply {
+            put("mail.smtp.starttls.enable", true)
+            put("mail.smtp.starttls.required", true)
+            put("mail.smtp.ssl.trust", "smtp.163.com") // 只信任163服务器
+        }
+    }
+
     val sendMailSession = Session.getDefaultInstance(pro, authenticator)
     val mime = MimeMessage(sendMailSession)
     mime.setFrom(InternetAddress(config.emailSender))

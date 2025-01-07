@@ -8,10 +8,10 @@ import javax.mail.PasswordAuthentication
  * @email: 290677893@qq.com
  * @date: 2020/1/16 15:42
  */
-class EmailAuthenticator(private val userName: String, private val password: String) :
+class EmailAuthenticator(private val userName: String, private val authCode: String) :
     Authenticator() {
 
     override fun getPasswordAuthentication(): PasswordAuthentication {
-        return PasswordAuthentication(userName, password)
+        return PasswordAuthentication(userName, authCode)
     }
 }

@@ -33,7 +33,7 @@ class EmailConfigActivity : KotlinBaseActivity<ActivityEmailConfigBinding>(), Ha
         weakReferenceHandler = WeakReferenceHandler(this)
         val config = EmailConfigKit.getConfig()
         binding.emailSendAddressView.setText(config.emailSender)
-        binding.emailSendCodeView.setText(config.permissionCode)
+        binding.emailSendCodeView.setText(config.authCode)
         binding.emailSendServerView.setText(config.senderServer)
         binding.emailSendPortView.setText(config.emailPort)
         binding.emailInboxView.setText(config.inboxEmail)
@@ -135,7 +135,7 @@ class EmailConfigActivity : KotlinBaseActivity<ActivityEmailConfigBinding>(), Ha
                 }
                 if (emailAddress.endsWith("@qq.com")) {
                     binding.emailSendServerView.setText("smtp.qq.com")
-                    binding.emailSendPortView.setText("587")
+                    binding.emailSendPortView.setText("465")
                 } else if (emailAddress.endsWith("@163.com")) {
                     binding.emailSendServerView.setText("smtp.163.com")
                     binding.emailSendPortView.setText("587")

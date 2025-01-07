@@ -2,15 +2,15 @@ package com.pengxh.daily.app.model;
 
 public class EmailConfigModel {
     private String emailSender;
-    private String permissionCode;
+    private String authCode;
     private String SenderServer;
     private String emailPort;
     private String inboxEmail;
     private String emailTitle;
 
-    public EmailConfigModel(String emailSender, String permissionCode, String senderServer, String emailPort, String inboxEmail, String emailTitle) {
+    public EmailConfigModel(String emailSender, String authCode, String senderServer, String emailPort, String inboxEmail, String emailTitle) {
         this.emailSender = emailSender;
-        this.permissionCode = permissionCode;
+        this.authCode = authCode;
         this.SenderServer = senderServer;
         this.emailPort = emailPort;
         this.inboxEmail = inboxEmail;
@@ -25,12 +25,12 @@ public class EmailConfigModel {
         this.emailSender = emailSender;
     }
 
-    public String getPermissionCode() {
-        return permissionCode;
+    public String getAuthCode() {
+        return authCode;
     }
 
-    public void setPermissionCode(String permissionCode) {
-        this.permissionCode = permissionCode;
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode;
     }
 
     public String getSenderServer() {
@@ -61,7 +61,7 @@ public class EmailConfigModel {
         return emailTitle;
     }
 
-    public void setEmailSubject(String emailTitle) {
+    public void setEmailTitle(String emailTitle) {
         this.emailTitle = emailTitle;
     }
 }
