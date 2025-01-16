@@ -55,7 +55,7 @@ class NotificationMonitorService : NotificationListenerService() {
         }
         SettingsFragment.weakReferenceHandler?.sendEmptyMessage(Constant.NOTICE_LISTENER_CONNECTED_CODE)
 
-        if (notice != Constant.FOREGROUND_RUNNING_SERVICE_TITLE) {
+        if (notice != Constant.FOREGROUND_RUNNING_SERVICE_TITLE && packageName != "android") {
             val notificationBean = NotificationBean()
             notificationBean.uuid = UUID.randomUUID().toString()
             notificationBean.packageName = packageName

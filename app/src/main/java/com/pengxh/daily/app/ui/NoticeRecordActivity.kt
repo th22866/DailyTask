@@ -3,8 +3,6 @@ package com.pengxh.daily.app.ui
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Message
 import android.view.View
 import com.pengxh.daily.app.BaseApplication
 import com.pengxh.daily.app.R
@@ -16,16 +14,13 @@ import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.divider.RecyclerViewItemDivider
-import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import com.pengxh.kt.lite.widget.TitleBarView
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 
-class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>(), Handler.Callback {
+class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
 
     private val notificationBeanDao by lazy { BaseApplication.get().daoSession.notificationBeanDao }
-    private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
     private lateinit var noticeAdapter: NormalRecyclerAdapter<NotificationBean>
-    private var dataBeans: MutableList<NotificationBean> = ArrayList()
     private var isRefresh = false
     private var isLoadMore = false
     private var offset = 0 // 本地数据库分页从0开始
@@ -52,7 +47,7 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>(), Handle
                         override fun onConfirmClick() {
                             notificationBeanDao.deleteAll()
                             binding.emptyView.visibility = View.VISIBLE
-                            binding.notificationView.visibility = View.GONE
+                            binding.recyclerView.visibility = View.GONE
                         }
                     }).build().show()
             }
@@ -60,36 +55,53 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>(), Handle
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        dataBeans = queryNotificationRecord()
-        weakReferenceHandler.sendEmptyMessage(2022061901)
+        val dataBeans = getNotificationRecord()
+        if (dataBeans.isEmpty()) {
+            binding.emptyView.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.GONE
+        } else {
+            binding.emptyView.visibility = View.GONE
+            binding.recyclerView.visibility = View.VISIBLE
+            noticeAdapter = object : NormalRecyclerAdapter<NotificationBean>(
+                R.layout.item_notice_rv_l, dataBeans
+            ) {
+                override fun convertView(
+                    viewHolder: ViewHolder, position: Int, item: NotificationBean
+                ) {
+                    viewHolder.setText(R.id.titleView, "标题：${item.notificationTitle}")
+                        .setText(R.id.packageNameView, "包名：${item.packageName}")
+                        .setText(R.id.messageView, "内容：${item.notificationMsg}")
+                        .setText(R.id.postTimeView, item.postTime)
+                }
+            }
+            binding.recyclerView.addItemDecoration(RecyclerViewItemDivider(1, Color.LTGRAY))
+            binding.recyclerView.adapter = noticeAdapter
+        }
     }
 
     override fun initEvent() {
-        binding.refreshLayout.setOnRefreshListener { refreshLayout ->
+        binding.refreshLayout.setOnRefreshListener {
             isRefresh = true
+            offset = 0
             object : CountDownTimer(1000, 500) {
                 override fun onTick(millisUntilFinished: Long) {}
                 override fun onFinish() {
+                    it.finishRefresh()
                     isRefresh = false
-                    dataBeans.clear()
-                    offset = 0
-                    dataBeans = queryNotificationRecord()
-                    refreshLayout.finishRefresh()
-                    weakReferenceHandler.sendEmptyMessage(2022061901)
+                    noticeAdapter.refresh(getNotificationRecord())
                 }
             }.start()
         }
 
-        binding.refreshLayout.setOnLoadMoreListener { refreshLayout ->
+        binding.refreshLayout.setOnLoadMoreListener {
             isLoadMore = true
+            offset++
             object : CountDownTimer(1000, 500) {
                 override fun onTick(millisUntilFinished: Long) {}
                 override fun onFinish() {
+                    it.finishLoadMore()
                     isLoadMore = false
-                    offset++
-                    dataBeans.addAll(queryNotificationRecord())
-                    refreshLayout.finishLoadMore()
-                    weakReferenceHandler.sendEmptyMessage(2022061901)
+                    noticeAdapter.loadMore(getNotificationRecord())
                 }
             }.start()
         }
@@ -99,40 +111,7 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>(), Handle
 
     }
 
-    override fun handleMessage(msg: Message): Boolean {
-        if (msg.what == 2022061901) {
-            if (isRefresh || isLoadMore) {
-                noticeAdapter.notifyDataSetChanged()
-            } else { //首次加载数据
-                if (dataBeans.size == 0) {
-                    binding.emptyView.visibility = View.VISIBLE
-                    binding.notificationView.visibility = View.GONE
-                } else {
-                    binding.emptyView.visibility = View.GONE
-                    binding.notificationView.visibility = View.VISIBLE
-                    noticeAdapter = object : NormalRecyclerAdapter<NotificationBean>(
-                        R.layout.item_notice_rv_l, dataBeans
-                    ) {
-                        override fun convertView(
-                            viewHolder: ViewHolder, position: Int, item: NotificationBean
-                        ) {
-                            viewHolder.setText(R.id.titleView, "标题：${item.notificationTitle}")
-                                .setText(R.id.packageNameView, "包名：${item.packageName}")
-                                .setText(R.id.messageView, "内容：${item.notificationMsg}")
-                                .setText(R.id.postTimeView, item.postTime)
-                        }
-                    }
-                    binding.notificationView.addItemDecoration(
-                        RecyclerViewItemDivider(1, Color.LTGRAY)
-                    )
-                    binding.notificationView.adapter = noticeAdapter
-                }
-            }
-        }
-        return true
-    }
-
-    private fun queryNotificationRecord(): MutableList<NotificationBean> {
+    private fun getNotificationRecord(): MutableList<NotificationBean> {
         return notificationBeanDao.queryBuilder()
             .orderDesc(NotificationBeanDao.Properties.PostTime)
             .offset(offset * 15).limit(15).list()
