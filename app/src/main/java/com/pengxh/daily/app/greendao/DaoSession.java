@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see org.greenrobot.greendao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
@@ -42,7 +42,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(DailyTaskBean.class, dailyTaskBeanDao);
         registerDao(NotificationBean.class, notificationBeanDao);
     }
-    
+
     public void clear() {
         dailyTaskBeanDaoConfig.clearIdentityScope();
         notificationBeanDaoConfig.clearIdentityScope();

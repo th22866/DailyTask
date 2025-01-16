@@ -11,8 +11,8 @@ android {
         applicationId "com.pengxh.daily.app"
         minSdkVersion 26 //Android 8.0
         targetSdkVersion 33
-        versionCode 2010
-        versionName "2.0.1"
+        versionCode 2020
+        versionName "2.0.2"
         flavorDimensions "versionCode"
     }
 
@@ -94,7 +94,7 @@ static def getBuildDate() {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'com.github.AndroidCoderPeng:Kotlin-lite-lib:1.1.0'
+    implementation 'com.github.AndroidCoderPeng:Kotlin-lite-lib:1.1.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
