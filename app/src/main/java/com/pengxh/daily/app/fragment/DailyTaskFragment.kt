@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -44,6 +45,7 @@ import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 import com.pengxh.kt.lite.widget.dialog.AlertInputDialog
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -281,18 +283,16 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         override fun run() {
             val currentDiffSeconds = diffSeconds.decrementAndGet()
             if (currentDiffSeconds > 0) {
-                val activity = requireActivity()
-                if (!activity.isFinishing && !activity.isDestroyed) {
-                    activity.runOnUiThread {
-                        binding.repeatTimeView.visibility = View.VISIBLE
-                        binding.repeatTimeView.text =
-                            "${currentDiffSeconds.formatTime()}后刷新每日任务"
-                    }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    binding.repeatTimeView.visibility = View.VISIBLE
+                    binding.repeatTimeView.text = "${currentDiffSeconds.formatTime()}后刷新每日任务"
                 }
                 repeatTaskHandler.postDelayed(this, 1000)
             } else {
-                //零点，刷新任务，并重启repeatTaskRunnable
+                // 零点，刷新任务，并重启repeatTaskRunnable
                 diffSeconds.set(TimeKit.getNextMidnightSeconds())
+                // 确保移除旧的回调
+                repeatTaskHandler.removeCallbacks(this)
                 repeatTaskHandler.post(this)
                 Log.d(kTag, "run: 零点，刷新任务，并重新执行repeatTaskRunnable")
                 executeDailyTask()
