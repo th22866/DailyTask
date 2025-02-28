@@ -334,6 +334,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 binding.actualTimeView.text = pair.first
                 val diff = pair.second
                 binding.countDownPgr.max = diff
+                //确保上一个倒计时任务一定已经结束，解决倒计时任务重叠问题
+                timerKit?.cancel()
                 timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
                     override fun updateCountDownSeconds(seconds: Int) {
                         binding.countDownTimeView.text = "${seconds.formatTime()}后执行任务"
