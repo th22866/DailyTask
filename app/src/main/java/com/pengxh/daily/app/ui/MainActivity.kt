@@ -69,10 +69,9 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     override fun initEvent() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            val itemId: Int = item.itemId
-            if (itemId == R.id.nav_daily) {
+            if (item.itemId == R.id.nav_daily) {
                 binding.viewPager.currentItem = 0
-            } else if (itemId == R.id.nav_settings) {
+            } else if (item.itemId == R.id.nav_settings) {
                 binding.viewPager.currentItem = 1
             }
             false
@@ -85,13 +84,17 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
             }
 
             override fun onPageSelected(position: Int) {
-                if (menuItem != null) {
-                    menuItem!!.isChecked = false
-                } else {
-                    binding.bottomNavigation.menu.getItem(0).isChecked = false
+                if (position < 0 || position >= binding.bottomNavigation.menu.size()) {
+                    return
                 }
+
+                // 获取当前选中的菜单项并取消选中
+                val currentMenuItem = menuItem ?: binding.bottomNavigation.menu.getItem(0)
+                currentMenuItem.isChecked = false
+
+                // 更新新的选中菜单项
                 menuItem = binding.bottomNavigation.menu.getItem(position)
-                menuItem!!.isChecked = true
+                menuItem?.isChecked = true
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
@@ -161,6 +164,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     override fun onResume() {
         super.onResume()
         if (binding.maskView.isVisible) {
+            insetsController.hide(WindowInsetsCompat.Type.statusBars())
             FloatingWindowService.weakReferenceHandler?.apply {
                 sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
             }
