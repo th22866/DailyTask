@@ -159,32 +159,10 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
     override fun initEvent() {
         binding.executeTaskButton.setOnClickListener {
-            if (dailyTaskBeanDao.loadAll().isEmpty()) {
-                "请先添加任务时间点".show(requireContext())
-                return@setOnClickListener
-            }
-
             if (!isTaskStarted) {
-                //计算当前时间距离0点的时间差
-                diffSeconds.set(TimeKit.getNextMidnightSeconds())
-                repeatTaskHandler.post(repeatTaskRunnable)
-                Log.d(kTag, "initEvent: 开启周期任务Runnable")
-                executeDailyTask()
-                isTaskStarted = true
-                binding.executeTaskButton.setImageResource(R.mipmap.ic_stop)
+                startExecuteTask(false)
             } else {
-                repeatTaskHandler.removeCallbacks(repeatTaskRunnable)
-                Log.d(kTag, "initEvent: 取消周期任务Runnable")
-                timerKit?.cancel()
-                isTaskStarted = false
-                binding.actualTimeView.text = "--:--:--"
-                binding.repeatTimeView.text = "0秒后刷新每日任务"
-                binding.repeatTimeView.visibility = View.INVISIBLE
-                binding.executeTaskButton.setImageResource(R.mipmap.ic_start)
-                binding.tipsView.text = ""
-                binding.countDownTimeView.text = "0秒后执行任务"
-                binding.countDownPgr.progress = 0
-                dailyTaskAdapter.updateCurrentTaskState(-1)
+                stopExecuteTask()
             }
         }
 
@@ -211,6 +189,44 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     }).build().show()
             }
         }
+    }
+
+    private fun startExecuteTask(isRemote: Boolean) {
+        if (dailyTaskBeanDao.loadAll().isEmpty()) {
+            if (isRemote) {
+                "循环任务停止失败，请注意下次打卡时间".sendEmail(
+                    requireContext(), "暂停循环任务通知", false
+                )
+            } else {
+                "请先添加任务时间点".show(requireContext())
+            }
+            return
+        }
+        //计算当前时间距离0点的时间差
+        diffSeconds.set(TimeKit.getNextMidnightSeconds())
+        repeatTaskHandler.post(repeatTaskRunnable)
+        Log.d(kTag, "initEvent: 开启周期任务Runnable")
+        executeDailyTask()
+        isTaskStarted = true
+        binding.executeTaskButton.setImageResource(R.mipmap.ic_stop)
+    }
+
+    private fun stopExecuteTask() {
+        repeatTaskHandler.removeCallbacks(repeatTaskRunnable)
+        Log.d(kTag, "initEvent: 取消周期任务Runnable")
+        timerKit?.cancel()
+        isTaskStarted = false
+        binding.actualTimeView.text = "--:--:--"
+        binding.repeatTimeView.text = "0秒后刷新每日任务"
+        binding.repeatTimeView.visibility = View.INVISIBLE
+        binding.executeTaskButton.setImageResource(R.mipmap.ic_start)
+        binding.tipsView.text = ""
+        binding.countDownTimeView.text = "0秒后执行任务"
+        binding.countDownPgr.progress = 0
+        dailyTaskAdapter.updateCurrentTaskState(-1)
+        "循环任务停止成功，请及时打开下次打卡任务".sendEmail(
+            requireContext(), "暂停循环任务通知", false
+        )
     }
 
     private fun addTask() {
@@ -406,6 +422,10 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 Log.d(kTag, "onMessageEvent: 取消超时定时器，执行下一个任务")
                 weakReferenceHandler.sendEmptyMessage(Constant.EXECUTE_NEXT_TASK_CODE)
             }
+
+            Constant.START_DAILY_TASK_CODE -> startExecuteTask(true)
+
+            Constant.STOP_DAILY_TASK_CODE -> stopExecuteTask()
         }
     }
 

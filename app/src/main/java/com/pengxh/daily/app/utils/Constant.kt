@@ -36,6 +36,9 @@ object Constant {
     const val SEND_EMAIL_SUCCESS_CODE = 2024122501
     const val SEND_EMAIL_FAILED_CODE = 2024122502
 
+    const val START_DAILY_TASK_CODE = 2025030701
+    const val STOP_DAILY_TASK_CODE = 2025030702
+
     const val DING_DING = "com.alibaba.android.rimet"
     const val WECHAT = "com.tencent.mm"
     const val QQ = "com.tencent.mobileqq"
