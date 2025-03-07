@@ -162,7 +162,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             if (!isTaskStarted) {
                 startExecuteTask(false)
             } else {
-                stopExecuteTask()
+                stopExecuteTask(false)
             }
         }
 
@@ -211,7 +211,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         binding.executeTaskButton.setImageResource(R.mipmap.ic_stop)
     }
 
-    private fun stopExecuteTask() {
+    private fun stopExecuteTask(isRemote: Boolean) {
         repeatTaskHandler.removeCallbacks(repeatTaskRunnable)
         Log.d(kTag, "initEvent: 取消周期任务Runnable")
         timerKit?.cancel()
@@ -224,9 +224,11 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         binding.countDownTimeView.text = "0秒后执行任务"
         binding.countDownPgr.progress = 0
         dailyTaskAdapter.updateCurrentTaskState(-1)
-        "循环任务停止成功，请及时打开下次打卡任务".sendEmail(
-            requireContext(), "暂停循环任务通知", false
-        )
+        if (isRemote) {
+            "循环任务停止成功，请及时打开下次打卡任务".sendEmail(
+                requireContext(), "暂停循环任务通知", false
+            )
+        }
     }
 
     private fun addTask() {
@@ -425,7 +427,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
             Constant.START_DAILY_TASK_CODE -> startExecuteTask(true)
 
-            Constant.STOP_DAILY_TASK_CODE -> stopExecuteTask()
+            Constant.STOP_DAILY_TASK_CODE -> stopExecuteTask(true)
         }
     }
 
