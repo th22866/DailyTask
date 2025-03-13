@@ -194,8 +194,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private fun startExecuteTask(isRemote: Boolean) {
         if (dailyTaskBeanDao.loadAll().isEmpty()) {
             if (isRemote) {
-                "循环任务停止失败，请注意下次打卡时间".sendEmail(
-                    requireContext(), "暂停循环任务通知", false
+                "循环任务启动成功，请注意下次打卡时间".sendEmail(
+                    requireContext(), "启动循环任务通知", false
                 )
             } else {
                 "请先添加任务时间点".show(requireContext())
