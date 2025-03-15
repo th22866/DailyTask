@@ -1,13 +1,12 @@
 package com.pengxh.daily.app.bean;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "notice_record_table")
 public class NotificationBean {
-    @Id(autoincrement = true)
-    private Long id;//主键ID
+    @PrimaryKey(autoGenerate = true)
+    private int id;//主键ID
 
     private String uuid;
     private String packageName;
@@ -15,31 +14,16 @@ public class NotificationBean {
     private String notificationMsg;
     private String postTime;
 
-    @Generated(hash = 2089076920)
-    public NotificationBean(Long id, String uuid, String packageName,
-                            String notificationTitle, String notificationMsg, String postTime) {
-        this.id = id;
-        this.uuid = uuid;
-        this.packageName = packageName;
-        this.notificationTitle = notificationTitle;
-        this.notificationMsg = notificationMsg;
-        this.postTime = postTime;
+    public int getId() {
+        return id;
     }
 
-    @Generated(hash = 1804399548)
-    public NotificationBean() {
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     public String getUuid() {
-        return this.uuid;
+        return uuid;
     }
 
     public void setUuid(String uuid) {
@@ -47,7 +31,7 @@ public class NotificationBean {
     }
 
     public String getPackageName() {
-        return this.packageName;
+        return packageName;
     }
 
     public void setPackageName(String packageName) {
@@ -55,7 +39,7 @@ public class NotificationBean {
     }
 
     public String getNotificationTitle() {
-        return this.notificationTitle;
+        return notificationTitle;
     }
 
     public void setNotificationTitle(String notificationTitle) {
@@ -63,7 +47,7 @@ public class NotificationBean {
     }
 
     public String getNotificationMsg() {
-        return this.notificationMsg;
+        return notificationMsg;
     }
 
     public void setNotificationMsg(String notificationMsg) {
@@ -71,7 +55,7 @@ public class NotificationBean {
     }
 
     public String getPostTime() {
-        return this.postTime;
+        return postTime;
     }
 
     public void setPostTime(String postTime) {

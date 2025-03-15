@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import com.pengxh.daily.app.BaseApplication
+import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.adapter.DailyTaskAdapter
 import com.pengxh.daily.app.bean.DailyTaskBean
@@ -26,7 +26,6 @@ import com.pengxh.daily.app.extensions.openApplication
 import com.pengxh.daily.app.extensions.random
 import com.pengxh.daily.app.extensions.sendEmail
 import com.pengxh.daily.app.extensions.showTimePicker
-import com.pengxh.daily.app.greendao.DailyTaskBeanDao
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.CountDownTimerKit
@@ -57,7 +56,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handler.Callback {
 
     private val kTag = "DailyTaskFragment"
-    private val dailyTaskBeanDao by lazy { BaseApplication.get().daoSession.dailyTaskBeanDao }
+    private val dailyTaskDao by lazy { DailyTaskApplication.get().dataBase.dailyTaskDao() }
     private val marginOffset by lazy { 10.dp2px(requireContext()) }
     private val gson by lazy { Gson() }
     private val weakReferenceHandler = WeakReferenceHandler(this)
@@ -85,9 +84,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        taskBeans = dailyTaskBeanDao.queryBuilder().orderAsc(
-            DailyTaskBeanDao.Properties.Time
-        ).list()
+        taskBeans = dailyTaskDao.loadAll()
 
         updateEmptyViewVisibility()
 
@@ -113,7 +110,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                             requireActivity().showTimePicker(item, object : OnTimeSelectedCallback {
                                 override fun onTimePicked(time: String) {
                                     item.time = time
-                                    dailyTaskBeanDao.update(item)
+                                    dailyTaskDao.update(item)
                                     taskBeans.sortBy { x -> x.time }
                                     dailyTaskAdapter.notifyDataSetChanged()
                                 }
@@ -136,7 +133,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     .setPositiveButton("确定").setOnDialogButtonClickListener(object :
                         AlertControlDialog.OnDialogButtonClickListener {
                         override fun onConfirmClick() {
-                            dailyTaskBeanDao.delete(item)
+                            dailyTaskDao.delete(item)
                             if (taskBeans.remove(item)) {
                                 dailyTaskAdapter.notifyDataSetChanged()
                                 updateEmptyViewVisibility()
@@ -192,7 +189,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     }
 
     private fun startExecuteTask(isRemote: Boolean) {
-        if (dailyTaskBeanDao.loadAll().isEmpty()) {
+        if (dailyTaskDao.loadAll().isEmpty()) {
             if (isRemote) {
                 "循环任务启动成功，请注意下次打卡时间".sendEmail(
                     requireContext(), "启动循环任务通知", false
@@ -238,15 +235,13 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 bean.uuid = UUID.randomUUID().toString()
                 bean.time = time
 
-                val count = dailyTaskBeanDao.queryBuilder().where(
-                    DailyTaskBeanDao.Properties.Time.eq(time)
-                ).count()
+                val count = dailyTaskDao.loadAll().count()
                 if (count > 1) {
                     "任务时间点已存在".show(requireContext())
                     return
                 }
 
-                dailyTaskBeanDao.insert(bean)
+                dailyTaskDao.insert(bean)
                 taskBeans.add(bean)
                 taskBeans.sortBy { x -> x.time }
                 dailyTaskAdapter.notifyDataSetChanged()
@@ -269,7 +264,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     try {
                         val tasks = gson.fromJson<List<DailyTaskBean>>(value, type)
                         tasks.forEach {
-                            dailyTaskBeanDao.insert(it)
+                            dailyTaskDao.insert(it)
                             taskBeans.add(it)
                         }
                         taskBeans.sortBy { x -> x.time }

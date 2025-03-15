@@ -1,6 +1,7 @@
 package com.pengxh.daily.app.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,13 +63,13 @@ class DailyTaskAdapter(
             holder.taskStateView.visibility = View.VISIBLE
             holder.actualTimeCardView.visibility = View.VISIBLE
             holder.actualTimeView.text = actualTime
-            holder.taskTimeView.setTextColor(R.color.lib_hint_color.convertColor(context))
+            holder.taskTimeView.setTextColor(R.color.colorText.convertColor(context))
         } else {
             holder.itemView.isSelected = false
             holder.taskStateView.visibility = View.GONE
             holder.actualTimeCardView.visibility = View.GONE
             holder.actualTimeView.text = "--:--:--"
-            holder.taskTimeView.setTextColor(R.color.black.convertColor(context))
+            holder.taskTimeView.setTextColor(Color.BLACK)
         }
     }
 

@@ -3,11 +3,10 @@ package com.pengxh.daily.app.ui
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.os.Bundle
-import com.pengxh.daily.app.BaseApplication
+import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.databinding.ActivityTaskConfigBinding
 import com.pengxh.daily.app.extensions.initImmersionBar
-import com.pengxh.daily.app.greendao.DailyTaskBeanDao
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.widgets.TaskMessageDialog
@@ -25,7 +24,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
     private val kTag = "TaskConfigActivity"
     private val context = this
     private val timeArray = arrayListOf("15s", "30s", "45s")
-    private val dailyTaskBeanDao by lazy { BaseApplication.get().daoSession.dailyTaskBeanDao }
+    private val dailyTaskDao by lazy { DailyTaskApplication.get().dataBase.dailyTaskDao() }
     private val clipboard by lazy { getSystemService<ClipboardManager>() }
 
     override fun initEvent() {
@@ -69,9 +68,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
         }
 
         binding.outputLayout.setOnClickListener {
-            val taskBeans = dailyTaskBeanDao.queryBuilder().orderAsc(
-                DailyTaskBeanDao.Properties.Time
-            ).list()
+            val taskBeans = dailyTaskDao.loadAll()
 
             if (taskBeans.isEmpty()) {
                 "没有任务可以导出".show(this)

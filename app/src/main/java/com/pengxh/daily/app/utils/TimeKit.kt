@@ -1,15 +1,11 @@
 package com.pengxh.daily.app.utils
 
-import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 object TimeKit {
-
-    private const val kTag = "TimeKit"
-    private val gson by lazy { Gson() }
 
     fun getTodayDate(): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)

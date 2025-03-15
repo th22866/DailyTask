@@ -10,7 +10,9 @@ import android.view.animation.ScaleAnimation
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.get
 import androidx.core.view.isVisible
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.pengxh.daily.app.R
@@ -84,16 +86,16 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
             }
 
             override fun onPageSelected(position: Int) {
-                if (position < 0 || position >= binding.bottomNavigation.menu.size()) {
+                if (position < 0 || position >= binding.bottomNavigation.menu.size) {
                     return
                 }
 
                 // 获取当前选中的菜单项并取消选中
-                val currentMenuItem = menuItem ?: binding.bottomNavigation.menu.getItem(0)
+                val currentMenuItem = menuItem ?: binding.bottomNavigation.menu[0]
                 currentMenuItem.isChecked = false
 
                 // 更新新的选中菜单项
-                menuItem = binding.bottomNavigation.menu.getItem(position)
+                menuItem = binding.bottomNavigation.menu[position]
                 menuItem?.isChecked = true
             }
 

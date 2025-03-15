@@ -5,7 +5,7 @@ import android.os.BatteryManager
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
-import com.pengxh.daily.app.BaseApplication
+import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.bean.NotificationBean
 import com.pengxh.daily.app.extensions.backToMainActivity
 import com.pengxh.daily.app.extensions.openApplication
@@ -30,7 +30,7 @@ class NotificationMonitorService : NotificationListenerService() {
 
     private val kTag = "MonitorService"
 
-    private val notificationBeanDao by lazy { BaseApplication.get().daoSession.notificationBeanDao }
+    private val noticeDao by lazy { DailyTaskApplication.get().dataBase.noticeDao() }
     private val batteryManager by lazy { getSystemService<BatteryManager>() }
 
     /**
@@ -64,7 +64,7 @@ class NotificationMonitorService : NotificationListenerService() {
             notificationBean.notificationTitle = title
             notificationBean.notificationMsg = notice
             notificationBean.postTime = System.currentTimeMillis().timestampToCompleteDate()
-            notificationBeanDao.save(notificationBean)
+            noticeDao.insert(notificationBean)
         }
 
         if (packageName == Constant.DING_DING) {

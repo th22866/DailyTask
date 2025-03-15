@@ -33,7 +33,7 @@ class QuestionAndAnswerActivity : KotlinBaseActivity<ActivityQuestionAndAnswerBi
         val dataRows = gson.fromJson<MutableList<QuestionAnAnswerModel>>(
             assetsFile, object : TypeToken<MutableList<QuestionAnAnswerModel>>() {}.type
         )
-        binding.recyclerView.addItemDecoration(RecyclerViewItemDivider(1, Color.LTGRAY))
+        binding.recyclerView.addItemDecoration(RecyclerViewItemDivider(0f, 0f, Color.LTGRAY))
         binding.recyclerView.adapter = object :
             NormalRecyclerAdapter<QuestionAnAnswerModel>(R.layout.item_q_a_rv_l, dataRows) {
             override fun convertView(

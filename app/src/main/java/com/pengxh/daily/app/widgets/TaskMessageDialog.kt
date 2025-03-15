@@ -13,9 +13,7 @@ import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 import com.pengxh.kt.lite.extensions.toJson
 
-class TaskMessageDialog private constructor(builder: Builder) : Dialog(
-    builder.context, R.style.UserDefinedDialogStyle
-) {
+class TaskMessageDialog private constructor(builder: Builder) : Dialog(builder.context) {
     private val tasks = builder.tasks
     private val listener = builder.listener
 

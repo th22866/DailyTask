@@ -37,7 +37,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.Callback {
 
     companion object {
@@ -159,7 +158,7 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
             binding.tipsView.setTextColor(R.color.purple_500.convertColor(requireContext()))
         } else {
             binding.tipsView.text = "通知监听服务未开启，无法监听打卡通知"
-            binding.tipsView.setTextColor(R.color.red.convertColor(requireContext()))
+            binding.tipsView.setTextColor(Color.RED)
         }
     }
 

@@ -4,12 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import com.pengxh.daily.app.BaseApplication
+import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.bean.NotificationBean
 import com.pengxh.daily.app.databinding.ActivityNoticeBinding
 import com.pengxh.daily.app.extensions.initImmersionBar
-import com.pengxh.daily.app.greendao.NotificationBeanDao
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseActivity
@@ -19,11 +18,11 @@ import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 
 class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
 
-    private val notificationBeanDao by lazy { BaseApplication.get().daoSession.notificationBeanDao }
+    private val noticeDao by lazy { DailyTaskApplication.get().dataBase.noticeDao() }
     private lateinit var noticeAdapter: NormalRecyclerAdapter<NotificationBean>
     private var isRefresh = false
     private var isLoadMore = false
-    private var offset = 0 // 本地数据库分页从0开始
+    private var offset = 1
 
     override fun initViewBinding(): ActivityNoticeBinding {
         return ActivityNoticeBinding.inflate(layoutInflater)
@@ -45,7 +44,7 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
                     .setOnDialogButtonClickListener(object :
                         AlertMessageDialog.OnDialogButtonClickListener {
                         override fun onConfirmClick() {
-                            notificationBeanDao.deleteAll()
+                            noticeDao.deleteAll()
                             binding.emptyView.visibility = View.VISIBLE
                             binding.recyclerView.visibility = View.GONE
                         }
@@ -74,7 +73,7 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
                         .setText(R.id.postTimeView, item.postTime)
                 }
             }
-            binding.recyclerView.addItemDecoration(RecyclerViewItemDivider(1, Color.LTGRAY))
+            binding.recyclerView.addItemDecoration(RecyclerViewItemDivider(0f, 0f, Color.LTGRAY))
             binding.recyclerView.adapter = noticeAdapter
         }
     }
@@ -112,8 +111,6 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
     }
 
     private fun getNotificationRecord(): MutableList<NotificationBean> {
-        return notificationBeanDao.queryBuilder()
-            .orderDesc(NotificationBeanDao.Properties.PostTime)
-            .offset(offset * 15).limit(15).list()
+        return noticeDao.loadNoticeByTime(10, (offset - 1) * 10)
     }
 }
