@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mainBackground"
+        android:background="@color/back_ground_color"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="邮箱配置"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <androidx.cardview.widget.CardView
@@ -52,7 +52,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:text="任务配置"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <ImageView
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="悬浮图标"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <Switch
@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="通知监听"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <LinearLayout
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="调整亮度"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <Switch
@@ -184,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="退回桌面"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <LinearLayout
@@ -232,7 +232,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="唤起测试"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <ImageView
@@ -261,7 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="通知记录"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <ImageView
@@ -290,7 +290,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="常见问题"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <ImageView
@@ -319,7 +319,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:text="当前版本"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
             <TextView
@@ -329,7 +329,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorText"
+                android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
         </RelativeLayout>
     </LinearLayout>

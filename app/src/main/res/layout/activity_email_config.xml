@@ -4,7 +4,7 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackground"
+    android:background="@color/back_ground_color"
     android:orientation="vertical">
 
     <com.pengxh.kt.lite.widget.TitleBarView
@@ -15,6 +15,7 @@
         app:tbv_left_image="@drawable/ic_title_left_black"
         app:tbv_right_image="@drawable/ic_title_right_black"
         app:tbv_show_right_image="true"
+        app:tbv_smaller_title="true"
         app:tbv_text="邮箱配置"
         app:tbv_text_color="@color/black" />
 
@@ -33,7 +34,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="发件箱"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <com.pengxh.kt.lite.widget.DeleteEditText
@@ -70,7 +71,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="授权码"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <com.pengxh.kt.lite.widget.DeleteEditText
@@ -106,7 +107,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="服务器"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <com.pengxh.kt.lite.widget.DeleteEditText
@@ -142,7 +143,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="端口号"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <com.pengxh.kt.lite.widget.DeleteEditText
@@ -176,7 +177,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="收件箱"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <com.pengxh.kt.lite.widget.DeleteEditText
@@ -207,7 +208,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="邮件标题"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <com.pengxh.kt.lite.widget.DeleteEditText
@@ -243,18 +244,14 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="邮箱测试"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <Button
             android:id="@+id/sendEmailButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dp_10"
-            android:layout_marginStart="@dimen/dp_10"
-            android:background="@drawable/button_border_main_5"
-            android:text="发送"
-            android:textColor="@color/colorAppThemeLight"
-            android:textSize="@dimen/sp_16" />
+            android:text="发送" />
     </LinearLayout>
 </LinearLayout>

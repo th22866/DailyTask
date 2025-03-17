@@ -4,7 +4,7 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackground"
+    android:background="@color/back_ground_color"
     android:orientation="vertical">
 
     <com.pengxh.kt.lite.widget.TitleBarView
@@ -14,6 +14,7 @@
         android:background="@color/white"
         app:tbv_left_image="@drawable/ic_title_left_black"
         app:tbv_show_right_image="false"
+        app:tbv_smaller_title="true"
         app:tbv_text="任务配置"
         app:tbv_text_color="@color/black" />
 
@@ -31,7 +32,7 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:text="超时时间"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <TextView
@@ -63,7 +64,7 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:text="任务口令"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <TextView
@@ -95,7 +96,7 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:text="导出任务"
-            android:textColor="@color/colorText"
+            android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
         <ImageView

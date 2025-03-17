@@ -8,7 +8,7 @@
         android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mainBackground"
+        android:background="@color/back_ground_color"
         android:orientation="vertical">
 
         <androidx.viewpager.widget.ViewPager
@@ -22,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            app:itemIconTint="@drawable/bottom_text_color"
             app:itemTextColor="@drawable/bottom_text_color"
             app:menu="@menu/bottom_nav_menu" />
     </LinearLayout>

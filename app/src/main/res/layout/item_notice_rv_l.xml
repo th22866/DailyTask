@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="标题：I'm a Coder (43条新消息)"
-        android:textColor="@color/colorText"
+        android:textColor="@color/text_default_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,7 +21,7 @@
         android:layout_below="@id/titleView"
         android:layout_marginTop="5dp"
         android:text="包名：com.tencent.mobileqq"
-        android:textColor="@color/colorText"
+        android:textColor="@color/text_default_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleView" />
 
@@ -32,7 +32,7 @@
         android:layout_below="@id/packageNameView"
         android:layout_marginTop="5dp"
         android:text="内容：onNotificationPostedonNotificationPostedonNotificationPostedonNotificationPostedonNotificationPostedonNotificationPostedonNotificationPosted"
-        android:textColor="@color/colorText"
+        android:textColor="@color/text_default_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/packageNameView" />
 

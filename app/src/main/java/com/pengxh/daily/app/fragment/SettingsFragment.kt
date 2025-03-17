@@ -136,7 +136,7 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
         super.onResume()
         if (EmailConfigKit.isEmailConfigured()) {
             binding.emailTagView.backgroundTintList =
-                ColorStateList.valueOf(R.color.iOSGreen.convertColor(requireContext()))
+                ColorStateList.valueOf(R.color.ios_green.convertColor(requireContext()))
         } else {
             binding.emailTagView.backgroundTintList = ColorStateList.valueOf(Color.RED)
         }
@@ -155,7 +155,7 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
 
         if (requireContext().notificationEnable()) {
             binding.tipsView.text = "通知监听服务状态查询中，请稍后"
-            binding.tipsView.setTextColor(R.color.purple_500.convertColor(requireContext()))
+            binding.tipsView.setTextColor(R.color.theme_color.convertColor(requireContext()))
         } else {
             binding.tipsView.text = "通知监听服务未开启，无法监听打卡通知"
             binding.tipsView.setTextColor(Color.RED)

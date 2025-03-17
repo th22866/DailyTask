@@ -63,7 +63,7 @@ class DailyTaskAdapter(
             holder.taskStateView.visibility = View.VISIBLE
             holder.actualTimeCardView.visibility = View.VISIBLE
             holder.actualTimeView.text = actualTime
-            holder.taskTimeView.setTextColor(R.color.colorText.convertColor(context))
+            holder.taskTimeView.setTextColor(R.color.text_default_color.convertColor(context))
         } else {
             holder.itemView.isSelected = false
             holder.taskStateView.visibility = View.GONE

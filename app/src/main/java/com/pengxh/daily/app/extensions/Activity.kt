@@ -17,7 +17,7 @@ fun Activity.showTimePicker(dailyTaskBean: DailyTaskBean, callback: OnTimeSelect
     layout.setTimeMode(TimeMode.HOUR_24_HAS_SECOND)
     layout.setTimeLabel("时", "分", "秒")
     layout.setDefaultValue(dailyTaskBean.convertToTimeEntity())
-    layout.setSelectedTextColor(R.color.colorAppThemeLight.convertColor(this))
+    layout.setSelectedTextColor(R.color.theme_color.convertColor(this))
     layout.setSelectedTextBold(true)
 
     timePicker.setOnTimePickedListener { hour, minute, seconds ->
@@ -34,7 +34,7 @@ fun Activity.showTimePicker(callback: OnTimeSelectedCallback) {
     val layout = timePicker.wheelLayout
     layout.setTimeMode(TimeMode.HOUR_24_HAS_SECOND)
     layout.setTimeLabel("时", "分", "秒")
-    layout.setSelectedTextColor(R.color.colorAppThemeLight.convertColor(this))
+    layout.setSelectedTextColor(R.color.theme_color.convertColor(this))
     layout.setSelectedTextBold(true)
 
     timePicker.setOnTimePickedListener { hour, minute, seconds ->

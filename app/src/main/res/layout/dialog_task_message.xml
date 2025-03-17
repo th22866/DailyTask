@@ -47,8 +47,6 @@
             android:layout_height="@dimen/lib_dp_45"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:text="好的"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/lib_sp_14" />
+            android:text="好的" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

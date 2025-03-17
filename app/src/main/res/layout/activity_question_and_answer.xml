@@ -4,7 +4,7 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackground"
+    android:background="@color/back_ground_color"
     android:orientation="vertical">
 
     <com.pengxh.kt.lite.widget.TitleBarView
@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         app:tbv_left_image="@drawable/ic_title_left_black"
+        app:tbv_smaller_title="true"
         app:tbv_text="常见问题"
         app:tbv_text_color="@color/black" />
 

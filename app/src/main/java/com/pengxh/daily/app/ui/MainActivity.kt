@@ -48,7 +48,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     override fun setupTopBarLayout() {
         insetsController = WindowCompat.getInsetsController(window, binding.rootView)
-        binding.rootView.initImmersionBar(this, true, R.color.mainBackground)
+        binding.rootView.initImmersionBar(this, true, R.color.back_ground_color)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 

@@ -32,7 +32,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
             BottomActionSheet.Builder()
                 .setContext(this)
                 .setActionItemTitle(timeArray)
-                .setItemTextColor(R.color.colorAppThemeLight.convertColor(this))
+                .setItemTextColor(R.color.theme_color.convertColor(this))
                 .setOnActionSheetListener(object : BottomActionSheet.OnActionSheetListener {
                     override fun onActionItemClick(position: Int) {
                         val time = timeArray[position]

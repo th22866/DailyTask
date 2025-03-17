@@ -4,7 +4,7 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackground"
+    android:background="@color/back_ground_color"
     android:keepScreenOn="true"
     android:orientation="vertical">
 
@@ -52,7 +52,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:backgroundTint="@color/colorAppThemeLight"
+                        android:backgroundTint="@color/theme_color"
                         app:cardCornerRadius="@dimen/dp_5">
 
                         <TextView
@@ -104,7 +104,7 @@
                             android:fontFamily="sans-serif-condensed"
                             android:hint="请点击右侧按钮开始执行任务"
                             android:singleLine="true"
-                            android:textColor="@color/colorAppThemeLight"
+                            android:textColor="@color/theme_color"
                             android:textColorHint="@color/lib_hint_color"
                             android:textSize="@dimen/sp_16"
                             android:textStyle="bold" />
@@ -161,10 +161,12 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addTimerButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_margin="@dimen/dp_10"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_add" />
+        android:src="@drawable/ic_add"
+        app:tint="@color/white" />
 </FrameLayout>

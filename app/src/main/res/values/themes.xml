@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Base.Theme.DailyTask" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- 修改控件系统默认颜色 -->
-        <item name="colorAccent">@color/colorAppThemeLight</item>
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorAppThemeLight</item>
-        <item name="colorPrimaryVariant">@color/colorAppThemeLight</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="colorPrimary">@color/theme_color</item>
         <!-- Customize your theme here. -->
 
         <!-- 从 Android 15 开始，系统默认开启了 Edge-to-Edge 模式，这可能会导致 ImmersionBar 的一些功能失效 -->
         <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
+
+    <style name="Theme.DailyTask" parent="Base.Theme.DailyTask" />
 </resources>
