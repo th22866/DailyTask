@@ -28,7 +28,7 @@ class DailyTaskApplication : Application() {
         application = this
         SaveKeyValues.initSharedPreferences(this)
         CrashReport.initCrashReport(this, "ce38195468", false)
-        dataBase = databaseBuilder(this, DailyTaskDataBase::class.java, "DailyTask")
+        dataBase = databaseBuilder(this, DailyTaskDataBase::class.java, "DailyTask.db")
             .allowMainThreadQueries()
             .build()
     }

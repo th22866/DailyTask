@@ -48,7 +48,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
 
 
@@ -231,16 +230,13 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private fun addTask() {
         requireActivity().showTimePicker(object : OnTimeSelectedCallback {
             override fun onTimePicked(time: String) {
-                val bean = DailyTaskBean()
-                bean.uuid = UUID.randomUUID().toString()
-                bean.time = time
-
-                val count = dailyTaskDao.loadAll().count()
-                if (count > 1) {
+                if (dailyTaskDao.queryTaskByTime(time) > 0) {
                     "任务时间点已存在".show(requireContext())
                     return
                 }
 
+                val bean = DailyTaskBean()
+                bean.time = time
                 dailyTaskDao.insert(bean)
                 taskBeans.add(bean)
                 taskBeans.sortBy { x -> x.time }

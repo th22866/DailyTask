@@ -8,7 +8,6 @@ public class DailyTaskBean {
     @PrimaryKey(autoGenerate = true)
     private int id;//主键ID
 
-    private String uuid;
     private String time;
 
     public int getId() {
@@ -17,14 +16,6 @@ public class DailyTaskBean {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getTime() {

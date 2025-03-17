@@ -39,6 +39,10 @@ object Constant {
     const val START_DAILY_TASK_CODE = 2025030701
     const val STOP_DAILY_TASK_CODE = 2025030702
 
+    const val UPDATE_COUNT_DOWN_WORKER_CODE = 2025031701
+    const val COUNT_DOWN_WORKER_COMPLETED_CODE = 2025031702
+    const val COUNT_DOWN_WORKER_CANCELLED_CODE = 2025031703
+
     const val DING_DING = "com.alibaba.android.rimet"
     const val WECHAT = "com.tencent.mm"
     const val QQ = "com.tencent.mobileqq"

@@ -21,6 +21,9 @@ public interface DailyTaskBeanDao {
     @Delete
     void delete(DailyTaskBean bean);
 
+    @Query("SELECT COUNT(*) FROM daily_task_table WHERE time = :time")
+    int queryTaskByTime(String time);
+
     @Insert
     void insert(DailyTaskBean bean);
 }

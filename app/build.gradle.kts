@@ -15,8 +15,8 @@ android {
         applicationId = "com.pengxh.daily.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2050
-        versionName = "2.0.5"
+        versionCode = 2051
+        versionName = "2.0.5.1"
         flavorDimensions += "versionCode"
     }
 
@@ -110,7 +110,7 @@ dependencies {
     //沉浸式状态栏
     implementation("com.geyifeng.immersionbar:immersionbar:3.2.2")
     //数据库框架
-    implementation("androidx.room:room-runtime:2.5.1")
+    implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.5.1")
     //邮件
     implementation("com.sun.mail:android-mail:1.6.6")
