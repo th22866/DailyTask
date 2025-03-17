@@ -11,6 +11,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -28,9 +33,8 @@ import com.pengxh.daily.app.extensions.sendEmail
 import com.pengxh.daily.app.extensions.showTimePicker
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
-import com.pengxh.daily.app.utils.CountDownTimerKit
+import com.pengxh.daily.app.utils.CountDownWorker
 import com.pengxh.daily.app.utils.MessageEvent
-import com.pengxh.daily.app.utils.OnTimeCountDownCallback
 import com.pengxh.daily.app.utils.OnTimeSelectedCallback
 import com.pengxh.daily.app.utils.TimeKit
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -65,7 +69,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private var taskBeans: MutableList<DailyTaskBean> = ArrayList()
     private var diffSeconds = AtomicInteger(0)
     private var isTaskStarted = false
-    private var timerKit: CountDownTimerKit? = null
+
+    //    private var timerKit: CountDownTimerKit? = null
     private var timeoutTimer: CountDownTimer? = null
 
     override fun setupTopBarLayout() {
@@ -174,7 +179,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 BottomActionSheet.Builder()
                     .setContext(requireContext())
                     .setActionItemTitle(arrayListOf("添加任务", "导入任务"))
-                    .setItemTextColor(R.color.colorAppThemeLight.convertColor(requireContext()))
+                    .setItemTextColor(R.color.theme_color.convertColor(requireContext()))
                     .setOnActionSheetListener(object : BottomActionSheet.OnActionSheetListener {
                         override fun onActionItemClick(position: Int) {
                             when (position) {
@@ -210,7 +215,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private fun stopExecuteTask(isRemote: Boolean) {
         repeatTaskHandler.removeCallbacks(repeatTaskRunnable)
         Log.d(kTag, "initEvent: 取消周期任务Runnable")
-        timerKit?.cancel()
+//        timerKit?.cancel()
+        WorkManager.getInstance(requireContext()).cancelAllWork()
         isTaskStarted = false
         binding.actualTimeView.text = "--:--:--"
         binding.repeatTimeView.text = "0秒后刷新每日任务"
@@ -336,28 +342,42 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 val index = msg.obj as Int
                 val task = taskBeans[index]
                 binding.tipsView.text = "即将执行第 ${index + 1} 个任务"
-                binding.tipsView.setTextColor(R.color.colorAppThemeLight.convertColor(requireContext()))
+                binding.tipsView.setTextColor(R.color.theme_color.convertColor(requireContext()))
 
                 val pair = task.random()
                 dailyTaskAdapter.updateCurrentTaskState(index, pair.first)
                 binding.actualTimeView.text = pair.first
                 val diff = pair.second
+                Log.d(kTag, "任务时间差是: $diff 秒")
                 binding.countDownPgr.max = diff
-                //确保上一个倒计时任务一定已经结束，解决倒计时任务重叠问题
-                timerKit?.cancel()
-                timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
-                    override fun updateCountDownSeconds(seconds: Int) {
-                        binding.countDownTimeView.text = "${seconds.formatTime()}后执行任务"
-                        binding.countDownPgr.progress = diff - seconds
-                    }
 
-                    override fun onFinish() {
-                        binding.countDownTimeView.text = "0秒后执行任务"
-                        binding.countDownPgr.progress = 0
-                        requireContext().openApplication(Constant.DING_DING, true)
-                    }
-                })
-                timerKit?.start()
+//                timerKit?.cancel()
+//                timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
+//                    override fun updateCountDownSeconds(seconds: Int) {
+//                        binding.countDownTimeView.text = "${seconds.formatTime()}后执行任务"
+//                        binding.countDownPgr.progress = diff - seconds
+//                    }
+//
+//                    override fun onFinish() {
+//                        binding.countDownTimeView.text = "0秒后执行任务"
+//                        binding.countDownPgr.progress = 0
+//                        requireContext().openApplication(Constant.DING_DING, true)
+//                    }
+//                })
+//                timerKit?.start()
+
+                val inputData = Data.Builder().putInt("secondsInFuture", diff).build()
+                val constraints = Constraints.Builder()
+                    .setRequiresBatteryNotLow(false) // 忽略低电量
+                    .setRequiresCharging(false)      // 忽略是否充电
+                    .build()
+                val uniqueWorkRequest = OneTimeWorkRequestBuilder<CountDownWorker>()
+                    .setInputData(inputData)
+                    .setConstraints(constraints)
+                    .build()
+                WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+                    "DailyTaskWork", ExistingWorkPolicy.REPLACE, uniqueWorkRequest
+                )
             }
 
             Constant.EXECUTE_NEXT_TASK_CODE -> {
@@ -366,7 +386,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
             Constant.COMPLETED_ALL_TASK_CODE -> {
                 binding.tipsView.text = "当天所有任务已执行完毕"
-                binding.tipsView.setTextColor(R.color.iOSGreen.convertColor(requireContext()))
+                binding.tipsView.setTextColor(R.color.ios_green.convertColor(requireContext()))
                 dailyTaskAdapter.updateCurrentTaskState(-1)
                 dailyTaskHandler.removeCallbacks(dailyTaskRunnable)
             }
@@ -419,6 +439,17 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             Constant.START_DAILY_TASK_CODE -> startExecuteTask(true)
 
             Constant.STOP_DAILY_TASK_CODE -> stopExecuteTask(true)
+
+            Constant.UPDATE_COUNT_DOWN_WORKER_CODE -> {
+                binding.countDownTimeView.text = "${event.remainder.formatTime()}后执行任务"
+                binding.countDownPgr.progress = event.future - event.remainder
+            }
+
+            Constant.COUNT_DOWN_WORKER_COMPLETED_CODE -> {
+                binding.countDownTimeView.text = "0秒后执行任务"
+                binding.countDownPgr.progress = 0
+                requireContext().openApplication(Constant.DING_DING, true)
+            }
         }
     }
 
