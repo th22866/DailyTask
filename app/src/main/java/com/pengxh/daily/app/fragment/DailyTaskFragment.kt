@@ -11,11 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -33,8 +28,9 @@ import com.pengxh.daily.app.extensions.sendEmail
 import com.pengxh.daily.app.extensions.showTimePicker
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
-import com.pengxh.daily.app.utils.CountDownWorker
+import com.pengxh.daily.app.utils.CountDownTimerKit
 import com.pengxh.daily.app.utils.MessageEvent
+import com.pengxh.daily.app.utils.OnTimeCountDownCallback
 import com.pengxh.daily.app.utils.OnTimeSelectedCallback
 import com.pengxh.daily.app.utils.TimeKit
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -69,8 +65,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private var taskBeans: MutableList<DailyTaskBean> = ArrayList()
     private var diffSeconds = AtomicInteger(0)
     private var isTaskStarted = false
-
-    //    private var timerKit: CountDownTimerKit? = null
+    private var timerKit: CountDownTimerKit? = null
     private var timeoutTimer: CountDownTimer? = null
 
     override fun setupTopBarLayout() {
@@ -215,8 +210,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private fun stopExecuteTask(isRemote: Boolean) {
         repeatTaskHandler.removeCallbacks(repeatTaskRunnable)
         Log.d(kTag, "initEvent: 取消周期任务Runnable")
-//        timerKit?.cancel()
-        WorkManager.getInstance(requireContext()).cancelAllWork()
+        timerKit?.cancel()
+//        WorkManager.getInstance(requireContext()).cancelAllWork()
         isTaskStarted = false
         binding.actualTimeView.text = "--:--:--"
         binding.repeatTimeView.text = "0秒后刷新每日任务"
@@ -351,33 +346,33 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 Log.d(kTag, "任务时间差是: $diff 秒")
                 binding.countDownPgr.max = diff
 
-//                timerKit?.cancel()
-//                timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
-//                    override fun updateCountDownSeconds(seconds: Int) {
-//                        binding.countDownTimeView.text = "${seconds.formatTime()}后执行任务"
-//                        binding.countDownPgr.progress = diff - seconds
-//                    }
-//
-//                    override fun onFinish() {
-//                        binding.countDownTimeView.text = "0秒后执行任务"
-//                        binding.countDownPgr.progress = 0
-//                        requireContext().openApplication(Constant.DING_DING, true)
-//                    }
-//                })
-//                timerKit?.start()
+                timerKit?.cancel()
+                timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
+                    override fun updateCountDownSeconds(seconds: Int) {
+                        binding.countDownTimeView.text = "${seconds.formatTime()}后执行任务"
+                        binding.countDownPgr.progress = diff - seconds
+                    }
 
-                val inputData = Data.Builder().putInt("secondsInFuture", diff).build()
-                val constraints = Constraints.Builder()
-                    .setRequiresBatteryNotLow(false) // 忽略低电量
-                    .setRequiresCharging(false)      // 忽略是否充电
-                    .build()
-                val uniqueWorkRequest = OneTimeWorkRequestBuilder<CountDownWorker>()
-                    .setInputData(inputData)
-                    .setConstraints(constraints)
-                    .build()
-                WorkManager.getInstance(requireContext()).enqueueUniqueWork(
-                    "DailyTaskWork", ExistingWorkPolicy.REPLACE, uniqueWorkRequest
-                )
+                    override fun onFinish() {
+                        binding.countDownTimeView.text = "0秒后执行任务"
+                        binding.countDownPgr.progress = 0
+                        requireContext().openApplication(Constant.DING_DING, true)
+                    }
+                })
+                timerKit?.start()
+
+//                val inputData = Data.Builder().putInt("secondsInFuture", diff).build()
+//                val constraints = Constraints.Builder()
+//                    .setRequiresBatteryNotLow(false) // 忽略低电量
+//                    .setRequiresCharging(false)      // 忽略是否充电
+//                    .build()
+//                val uniqueWorkRequest = OneTimeWorkRequestBuilder<CountDownWorker>()
+//                    .setInputData(inputData)
+//                    .setConstraints(constraints)
+//                    .build()
+//                WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+//                    "DailyTaskWork", ExistingWorkPolicy.REPLACE, uniqueWorkRequest
+//                )
             }
 
             Constant.EXECUTE_NEXT_TASK_CODE -> {
@@ -396,8 +391,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(kTag, "onCreate: 注册EventBus")
         EventBus.getDefault().register(this)
+        Log.d(kTag, "onCreate: 注册EventBus")
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -440,16 +435,16 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
             Constant.STOP_DAILY_TASK_CODE -> stopExecuteTask(true)
 
-            Constant.UPDATE_COUNT_DOWN_WORKER_CODE -> {
-                binding.countDownTimeView.text = "${event.remainder.formatTime()}后执行任务"
-                binding.countDownPgr.progress = event.future - event.remainder
-            }
-
-            Constant.COUNT_DOWN_WORKER_COMPLETED_CODE -> {
-                binding.countDownTimeView.text = "0秒后执行任务"
-                binding.countDownPgr.progress = 0
-                requireContext().openApplication(Constant.DING_DING, true)
-            }
+//            Constant.UPDATE_COUNT_DOWN_WORKER_CODE -> {
+//                binding.countDownTimeView.text = "${event.remainder.formatTime()}后执行任务"
+//                binding.countDownPgr.progress = event.future - event.remainder
+//            }
+//
+//            Constant.COUNT_DOWN_WORKER_COMPLETED_CODE -> {
+//                binding.countDownTimeView.text = "0秒后执行任务"
+//                binding.countDownPgr.progress = 0
+//                requireContext().openApplication(Constant.DING_DING, true)
+//            }
         }
     }
 

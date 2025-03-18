@@ -126,4 +126,6 @@ dependencies {
     implementation("com.tencent.bugly:crashreport:latest.release")
     //消息总线
     implementation("org.greenrobot:eventbus:3.3.1")
+    //系统级后台任务
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 }

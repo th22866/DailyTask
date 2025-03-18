@@ -75,12 +75,12 @@
                 </RelativeLayout>
 
                 <TextClock
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:fontFamily="@font/ds_digital"
                     android:format24Hour="HH:mm:ss"
-                    android:paddingVertical="@dimen/dp_40"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/dp_30"
                     android:textColor="@color/black"
                     android:textSize="56sp" />
 

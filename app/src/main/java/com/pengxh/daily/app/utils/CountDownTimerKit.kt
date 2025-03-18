@@ -5,8 +5,7 @@ import android.os.Looper
 import android.util.Log
 
 class CountDownTimerKit(
-    private val secondsInFuture: Int,
-    private val callback: OnTimeCountDownCallback
+    private val secondsInFuture: Int, private val callback: OnTimeCountDownCallback
 ) {
     private val kTag = "CountDownTimerKit"
     private val handler = Handler(Looper.getMainLooper())
