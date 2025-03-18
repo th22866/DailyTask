@@ -4,22 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_stroke_layout_radius_10"
-    android:orientation="vertical"
-    android:paddingVertical="@dimen/dp_20">
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_20">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="@dimen/dp_20">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/taskStateView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:backgroundTint="@color/lib_hint_color"
-            android:visibility="gone"
             app:cardCornerRadius="@dimen/dp_5">
 
             <TextView
@@ -34,26 +33,24 @@
             android:id="@+id/taskTimeView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/dp_10"
             android:gravity="center"
             android:text="08:00"
             android:textColor="@color/black"
             android:textSize="30sp" />
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/actualTimeCardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="@dimen/dp_20"
-        android:layout_marginTop="@dimen/dp_10"
-        android:visibility="gone">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:backgroundTint="@color/theme_color"
             app:cardCornerRadius="@dimen/dp_5">
 
@@ -69,11 +66,11 @@
             android:id="@+id/actualTimeView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/dp_10"
             android:gravity="center"
             android:text="--:--:--"
             android:textColor="@color/black"
             android:textSize="30sp" />
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
 

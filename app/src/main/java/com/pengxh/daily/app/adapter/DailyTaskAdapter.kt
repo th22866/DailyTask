@@ -5,9 +5,10 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.bean.DailyTaskBean
@@ -63,7 +64,8 @@ class DailyTaskAdapter(
             holder.taskStateView.visibility = View.VISIBLE
             holder.actualTimeCardView.visibility = View.VISIBLE
             holder.actualTimeView.text = actualTime
-            holder.taskTimeView.setTextColor(R.color.text_default_color.convertColor(context))
+            holder.taskTimeView.setTextColor("#CCCCCC".toColorInt())
+            holder.actualTimeView.setTextColor(R.color.theme_color.convertColor(context))
         } else {
             holder.itemView.isSelected = false
             holder.taskStateView.visibility = View.GONE
@@ -86,7 +88,7 @@ class DailyTaskAdapter(
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var actualTimeCardView: RelativeLayout = itemView.findViewById(R.id.actualTimeCardView)
+        var actualTimeCardView: LinearLayout = itemView.findViewById(R.id.actualTimeCardView)
         var actualTimeView: TextView = itemView.findViewById(R.id.actualTimeView)
         var taskStateView: CardView = itemView.findViewById(R.id.taskStateView)
         var taskTimeView: TextView = itemView.findViewById(R.id.taskTimeView)
