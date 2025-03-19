@@ -211,7 +211,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         repeatTaskHandler.removeCallbacks(repeatTaskRunnable)
         Log.d(kTag, "initEvent: 取消周期任务Runnable")
         timerKit?.cancel()
-//        WorkManager.getInstance(requireContext()).cancelAllWork()
         isTaskStarted = false
         binding.actualTimeView.text = "--:--:--"
         binding.repeatTimeView.text = "0秒后刷新每日任务"
@@ -360,19 +359,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     }
                 })
                 timerKit?.start()
-
-//                val inputData = Data.Builder().putInt("secondsInFuture", diff).build()
-//                val constraints = Constraints.Builder()
-//                    .setRequiresBatteryNotLow(false) // 忽略低电量
-//                    .setRequiresCharging(false)      // 忽略是否充电
-//                    .build()
-//                val uniqueWorkRequest = OneTimeWorkRequestBuilder<CountDownWorker>()
-//                    .setInputData(inputData)
-//                    .setConstraints(constraints)
-//                    .build()
-//                WorkManager.getInstance(requireContext()).enqueueUniqueWork(
-//                    "DailyTaskWork", ExistingWorkPolicy.REPLACE, uniqueWorkRequest
-//                )
             }
 
             Constant.EXECUTE_NEXT_TASK_CODE -> {
@@ -434,17 +420,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             Constant.START_DAILY_TASK_CODE -> startExecuteTask(true)
 
             Constant.STOP_DAILY_TASK_CODE -> stopExecuteTask(true)
-
-//            Constant.UPDATE_COUNT_DOWN_WORKER_CODE -> {
-//                binding.countDownTimeView.text = "${event.remainder.formatTime()}后执行任务"
-//                binding.countDownPgr.progress = event.future - event.remainder
-//            }
-//
-//            Constant.COUNT_DOWN_WORKER_COMPLETED_CODE -> {
-//                binding.countDownTimeView.text = "0秒后执行任务"
-//                binding.countDownPgr.progress = 0
-//                requireContext().openApplication(Constant.DING_DING, true)
-//            }
         }
     }
 
