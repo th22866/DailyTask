@@ -9,14 +9,14 @@ plugins {
 
 android {
     namespace = "com.pengxh.daily.app"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.pengxh.daily.app"
         minSdk = 26
-        targetSdk = 36
-        versionCode = 2051
-        versionName = "2.0.5.1"
+        targetSdk = 35
+        versionCode = 2060
+        versionName = "2.0.6"
         flavorDimensions += "versionCode"
     }
 
