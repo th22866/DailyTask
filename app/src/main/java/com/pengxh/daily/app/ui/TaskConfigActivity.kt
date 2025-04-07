@@ -13,6 +13,7 @@ import com.pengxh.daily.app.widgets.TaskMessageDialog
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.getSystemService
+import com.pengxh.kt.lite.extensions.isNumber
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.widget.TitleBarView
@@ -23,7 +24,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
 
     private val kTag = "TaskConfigActivity"
     private val context = this
-    private val timeArray = arrayListOf("15s", "30s", "45s")
+    private val timeArray = arrayListOf("15s", "30s", "45s", "自定义（单位：秒）")
     private val dailyTaskDao by lazy { DailyTaskApplication.get().dataBase.dailyTaskDao() }
     private val clipboard by lazy { getSystemService<ClipboardManager>() }
 
@@ -35,16 +36,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
                 .setItemTextColor(R.color.theme_color.convertColor(this))
                 .setOnActionSheetListener(object : BottomActionSheet.OnActionSheetListener {
                     override fun onActionItemClick(position: Int) {
-                        val time = timeArray[position]
-                        binding.timeoutTextView.text = time
-                        SaveKeyValues.putValue(Constant.STAY_DD_TIMEOUT_KEY, time)
-
-                        FloatingWindowService.weakReferenceHandler?.apply {
-                            val message = obtainMessage()
-                            message.what = Constant.UPDATE_TICK_TIME_CODE
-                            message.obj = time
-                            sendMessage(message)
-                        }
+                        setTimeByPosition(position)
                     }
                 }).build().show()
         }
@@ -86,6 +78,47 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
                         "任务已复制到剪切板".show(context)
                     }
                 }).build().show()
+        }
+    }
+
+    private fun setTimeByPosition(position: Int) {
+        if (position == 3) {
+            AlertInputDialog.Builder()
+                .setContext(this)
+                .setTitle("设置超时时间")
+                .setHintMessage("直接输入整数时间即可，如：60")
+                .setNegativeButton("取消")
+                .setPositiveButton("确定")
+                .setOnDialogButtonClickListener(object :
+                    AlertInputDialog.OnDialogButtonClickListener {
+                    override fun onConfirmClick(value: String) {
+                        if (value.isNumber()) {
+                            val time = "${value}s"
+                            binding.timeoutTextView.text = time
+                            SaveKeyValues.putValue(Constant.STAY_DD_TIMEOUT_KEY, time)
+                            FloatingWindowService.weakReferenceHandler?.apply {
+                                val message = obtainMessage()
+                                message.what = Constant.UPDATE_TICK_TIME_CODE
+                                message.obj = time
+                                sendMessage(message)
+                            }
+                        } else {
+                            "直接输入整数时间即可".show(context)
+                        }
+                    }
+
+                    override fun onCancelClick() {}
+                }).build().show()
+        } else {
+            val time = timeArray[position]
+            binding.timeoutTextView.text = time
+            SaveKeyValues.putValue(Constant.STAY_DD_TIMEOUT_KEY, time)
+            FloatingWindowService.weakReferenceHandler?.apply {
+                val message = obtainMessage()
+                message.what = Constant.UPDATE_TICK_TIME_CODE
+                message.obj = time
+                sendMessage(message)
+            }
         }
     }
 
