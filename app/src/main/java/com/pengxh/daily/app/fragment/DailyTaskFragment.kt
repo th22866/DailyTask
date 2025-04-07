@@ -189,13 +189,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
     private fun startExecuteTask(isRemote: Boolean) {
         if (dailyTaskDao.loadAll().isEmpty()) {
-            if (isRemote) {
-                "循环任务启动成功，请注意下次打卡时间".sendEmail(
-                    requireContext(), "启动循环任务通知", false
-                )
-            } else {
-                "请先添加任务时间点".show(requireContext())
-            }
+            "循环任务启动失败，请先添加任务时间点".sendEmail(
+                requireContext(), "启动循环任务通知", false
+            )
             return
         }
         //计算当前时间距离0点的时间差
@@ -205,6 +201,11 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         executeDailyTask()
         isTaskStarted = true
         binding.executeTaskButton.setImageResource(R.mipmap.ic_stop)
+        if (isRemote) {
+            "循环任务启动成功，请注意下次打卡时间".sendEmail(
+                requireContext(), "启动循环任务通知", false
+            )
+        }
     }
 
     private fun stopExecuteTask(isRemote: Boolean) {
@@ -221,7 +222,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         binding.countDownPgr.progress = 0
         dailyTaskAdapter.updateCurrentTaskState(-1)
         if (isRemote) {
-            "循环任务停止成功，请及时打开下次打卡任务".sendEmail(
+            "循环任务停止成功，请及时打开下次任务".sendEmail(
                 requireContext(), "暂停循环任务通知", false
             )
         }
