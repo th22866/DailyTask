@@ -49,11 +49,12 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     override fun setupTopBarLayout() {
         insetsController = WindowCompat.getInsetsController(window, binding.rootView)
         binding.rootView.initImmersionBar(this, true, R.color.back_ground_color)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        startService(Intent(this, ForegroundRunningService::class.java))
+        Intent(this, ForegroundRunningService::class.java).apply {
+            startService(this)
+        }
         val fragmentAdapter = BaseFragmentAdapter(supportFragmentManager, fragmentPages)
         binding.viewPager.adapter = fragmentAdapter
         val isFirst = SaveKeyValues.getValue("isFirst", true) as Boolean
