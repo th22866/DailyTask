@@ -13,7 +13,6 @@ import com.pengxh.daily.app.extensions.sendEmail
 import com.pengxh.daily.app.fragment.SettingsFragment
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.MessageEvent
-import com.pengxh.kt.lite.extensions.getSystemService
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
 import com.pengxh.kt.lite.utils.SaveKeyValues
@@ -29,9 +28,8 @@ import java.util.UUID
 class NotificationMonitorService : NotificationListenerService() {
 
     private val kTag = "MonitorService"
-
     private val noticeDao by lazy { DailyTaskApplication.get().dataBase.noticeDao() }
-    private val batteryManager by lazy { getSystemService<BatteryManager>() }
+    private val batteryManager by lazy { getSystemService(BATTERY_SERVICE) as BatteryManager }
 
     /**
      * 有可用的并且和通知管理器连接成功时回调
@@ -58,13 +56,15 @@ class NotificationMonitorService : NotificationListenerService() {
         SettingsFragment.weakReferenceHandler?.sendEmptyMessage(Constant.NOTICE_LISTENER_CONNECTED_CODE)
 
         if (notice != Constant.FOREGROUND_RUNNING_SERVICE_TITLE && packageName != "android") {
-            val notificationBean = NotificationBean()
-            notificationBean.uuid = UUID.randomUUID().toString()
-            notificationBean.packageName = packageName
-            notificationBean.notificationTitle = title
-            notificationBean.notificationMsg = notice
-            notificationBean.postTime = System.currentTimeMillis().timestampToCompleteDate()
-            noticeDao.insert(notificationBean)
+            NotificationBean().apply {
+                uuid = UUID.randomUUID().toString()
+                this.packageName = packageName //重复冲突，this关键字指明是哪个
+                notificationTitle = title
+                notificationMsg = notice
+                postTime = System.currentTimeMillis().timestampToCompleteDate()
+            }.also {
+                noticeDao.insert(it)
+            }
         }
 
         if (packageName == Constant.DING_DING) {
@@ -75,7 +75,7 @@ class NotificationMonitorService : NotificationListenerService() {
             }
         } else if (packageName == Constant.WECHAT || packageName == Constant.QQ || packageName == Constant.TIM || packageName == Constant.ZFB) {
             if (notice.contains("电量")) {
-                val capacity = batteryManager?.getIntProperty(
+                val capacity = batteryManager.getIntProperty(
                     BatteryManager.BATTERY_PROPERTY_CAPACITY
                 )
                 "当前手机剩余电量为：${capacity}%".sendEmail(this, "查询手机电量通知", false)
