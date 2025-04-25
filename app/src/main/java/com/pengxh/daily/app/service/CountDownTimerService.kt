@@ -46,6 +46,7 @@ class CountDownTimerService : Service() {
             this, "countdown_timer_service_channel"
         ).run {
             setSmallIcon(R.mipmap.ic_launcher)
+            setContentText("倒计时服务已就绪")
             setPriority(NotificationCompat.PRIORITY_MIN) // 设置通知优先级
             setOngoing(true)
             setOnlyAlertOnce(true)
@@ -94,6 +95,12 @@ class CountDownTimerService : Service() {
     fun cancelCountDown() {
         if (isTimerRunning) {
             countDownTimer?.cancel()
+            notificationBuilder?.let {
+                it.setContentText("倒计时任务已停止")
+                it.build()
+            }.also {
+                notificationManager?.notify(notificationId, it)
+            }
             isTimerRunning = false
         }
         Log.d(kTag, "cancelCountDown: 倒计时任务取消")

@@ -25,20 +25,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/repeatTimeView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/bg_solid_layout_black_radius_5"
-                    android:drawablePadding="@dimen/dp_5"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/dp_10"
-                    android:text="0秒后刷新每日任务"
-                    android:textColor="@color/white"
-                    android:visibility="invisible"
-                    app:drawableStartCompat="@drawable/ic_sand" />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,11 +96,17 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/countDownTimeView"
+                            android:id="@+id/repeatTimeView"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_5"
-                            android:text="0秒后执行任务" />
+                            android:layout_height="24dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@drawable/bg_solid_layout_black_radius_5"
+                            android:drawablePadding="@dimen/dp_5"
+                            android:gravity="center"
+                            android:paddingHorizontal="@dimen/dp_10"
+                            android:text="--秒后刷新每日任务"
+                            android:textColor="@color/white"
+                            app:drawableStartCompat="@drawable/ic_sand" />
                     </LinearLayout>
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -125,16 +117,6 @@
                         android:layout_marginStart="@dimen/dp_10"
                         android:src="@mipmap/ic_start" />
                 </LinearLayout>
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/countDownPgr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/dp_10"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:indeterminate="false"
-                    app:trackCornerRadius="@dimen/dp_3"
-                    app:trackThickness="@dimen/dp_7" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

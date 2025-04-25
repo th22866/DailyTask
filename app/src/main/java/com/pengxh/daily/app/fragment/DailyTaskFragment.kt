@@ -239,12 +239,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         countDownTimerService?.cancelCountDown()
         isTaskStarted = false
         binding.actualTimeView.text = "--:--:--"
-        binding.repeatTimeView.text = "0秒后刷新每日任务"
-        binding.repeatTimeView.visibility = View.INVISIBLE
+        binding.repeatTimeView.text = "--秒后刷新每日任务"
         binding.executeTaskButton.setImageResource(R.mipmap.ic_start)
         binding.tipsView.text = ""
-        binding.countDownTimeView.text = "0秒后执行任务"
-        binding.countDownPgr.progress = 0
         dailyTaskAdapter.updateCurrentTaskState(-1)
         if (isRemote) {
             "循环任务停止成功，请及时打开下次任务".sendEmail(
@@ -319,7 +316,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             val currentDiffSeconds = diffSeconds.decrementAndGet()
             if (currentDiffSeconds > 0) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    binding.repeatTimeView.visibility = View.VISIBLE
                     binding.repeatTimeView.text = "${currentDiffSeconds.formatTime()}后刷新每日任务"
                 }
                 repeatTaskHandler.postDelayed(this, 1000)
@@ -369,7 +365,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 binding.actualTimeView.text = pair.first
                 val diff = pair.second
                 Log.d(kTag, "任务时间差是: $diff 秒")
-                binding.countDownPgr.max = diff
 //                timerKit?.cancel()
 //                timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
 //                    override fun updateCountDownSeconds(seconds: Int) {
