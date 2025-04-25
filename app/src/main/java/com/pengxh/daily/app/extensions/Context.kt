@@ -35,6 +35,7 @@ fun Context.openApplication(packageName: String, needEmail: Boolean) {
         }
         true
     } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
         false
     }
     if (!isContains) {
@@ -79,13 +80,13 @@ fun Context.backToMainActivity() {
     if (SaveKeyValues.getValue(Constant.BACK_TO_HOME_KEY, false) as Boolean) {
         //模拟点击Home键
         val home = Intent(Intent.ACTION_MAIN)
-        home.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        home.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         home.addCategory(Intent.CATEGORY_HOME)
         this.startActivity(home)
         Thread.sleep(2000)
     }
 
     val intent = Intent(this, MainActivity::class.java)
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
     this.startActivity(intent)
 }
