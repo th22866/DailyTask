@@ -170,7 +170,7 @@ class EmailConfigActivity : KotlinBaseActivity<ActivityEmailConfigBinding>(), Ha
             }
 
             Constant.SEND_EMAIL_FAILED_CODE -> {
-                "发送失败，请检查授权码、端口等配置".show(this)
+                "发送失败：${msg.obj}".show(this)
             }
         }
         return true

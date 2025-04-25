@@ -91,7 +91,10 @@ fun String.sendEmail(context: Context, title: String?, isTest: Boolean) {
         } catch (e: Exception) {
             e.printStackTrace()
             if (isTest) {
-                EmailConfigActivity.weakReferenceHandler.sendEmptyMessage(Constant.SEND_EMAIL_FAILED_CODE)
+                val message = EmailConfigActivity.weakReferenceHandler.obtainMessage()
+                message.what = Constant.SEND_EMAIL_FAILED_CODE
+                message.obj = e.message
+                EmailConfigActivity.weakReferenceHandler.sendMessage(message)
             }
         }
     }.start()

@@ -15,8 +15,9 @@ android {
         targetSdk = 35
         versionCode = 2060
         versionName = '2.0.6'
-        flavorDimensions 'versionCode'
     }
+
+    flavorDimensions += 'versionCode'
 
     signingConfigs {
         release {
