@@ -1,9 +1,14 @@
 package com.pengxh.daily.app.fragment
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.os.Message
 import android.util.Log
@@ -22,15 +27,14 @@ import com.pengxh.daily.app.databinding.FragmentDailyTaskBinding
 import com.pengxh.daily.app.extensions.backToMainActivity
 import com.pengxh.daily.app.extensions.formatTime
 import com.pengxh.daily.app.extensions.getTaskIndex
-import com.pengxh.daily.app.extensions.openApplication
 import com.pengxh.daily.app.extensions.random
 import com.pengxh.daily.app.extensions.sendEmail
 import com.pengxh.daily.app.extensions.showTimePicker
+import com.pengxh.daily.app.service.CountDownTimerService
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.CountDownTimerKit
 import com.pengxh.daily.app.utils.MessageEvent
-import com.pengxh.daily.app.utils.OnTimeCountDownCallback
 import com.pengxh.daily.app.utils.OnTimeSelectedCallback
 import com.pengxh.daily.app.utils.TimeKit
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -67,6 +71,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private var isTaskStarted = false
     private var timerKit: CountDownTimerKit? = null
     private var timeoutTimer: CountDownTimer? = null
+    private var countDownTimerService: CountDownTimerService? = null
 
     override fun setupTopBarLayout() {
 
@@ -74,6 +79,20 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
     override fun observeRequestState() {
 
+    }
+
+    /**
+     * 服务绑定
+     * */
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as CountDownTimerService.LocaleBinder
+            countDownTimerService = binder.getService()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
     }
 
     override fun initViewBinding(
@@ -94,6 +113,25 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 marginOffset, marginOffset shr 1, marginOffset, marginOffset shr 1
             )
         )
+
+        Intent(requireContext(), CountDownTimerService::class.java).apply {
+            requireContext().bindService(this, connection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    private fun updateEmptyViewVisibility() {
+        binding.emptyView.visibility = if (taskBeans.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    override fun initEvent() {
+        binding.executeTaskButton.setOnClickListener {
+            if (!isTaskStarted) {
+                startExecuteTask(false)
+            } else {
+                stopExecuteTask(false)
+            }
+        }
+
         dailyTaskAdapter.setOnItemClickListener(object :
             DailyTaskAdapter.OnItemClickListener<DailyTaskBean> {
             override fun onItemClick(item: DailyTaskBean, position: Int) {
@@ -147,20 +185,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     }).build().show()
             }
         })
-    }
-
-    private fun updateEmptyViewVisibility() {
-        binding.emptyView.visibility = if (taskBeans.isEmpty()) View.VISIBLE else View.GONE
-    }
-
-    override fun initEvent() {
-        binding.executeTaskButton.setOnClickListener {
-            if (!isTaskStarted) {
-                startExecuteTask(false)
-            } else {
-                stopExecuteTask(false)
-            }
-        }
 
         binding.addTimerButton.setOnClickListener {
             if (isTaskStarted) {
@@ -211,7 +235,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private fun stopExecuteTask(isRemote: Boolean) {
         repeatTaskHandler.removeCallbacks(repeatTaskRunnable)
         Log.d(kTag, "initEvent: 取消周期任务Runnable")
-        timerKit?.cancel()
+//        timerKit?.cancel()
+        countDownTimerService?.cancelCountDown()
         isTaskStarted = false
         binding.actualTimeView.text = "--:--:--"
         binding.repeatTimeView.text = "0秒后刷新每日任务"
@@ -345,21 +370,21 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 val diff = pair.second
                 Log.d(kTag, "任务时间差是: $diff 秒")
                 binding.countDownPgr.max = diff
-
-                timerKit?.cancel()
-                timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
-                    override fun updateCountDownSeconds(seconds: Int) {
-                        binding.countDownTimeView.text = "${seconds.formatTime()}后执行任务"
-                        binding.countDownPgr.progress = diff - seconds
-                    }
-
-                    override fun onFinish() {
-                        binding.countDownTimeView.text = "0秒后执行任务"
-                        binding.countDownPgr.progress = 0
-                        requireContext().openApplication(Constant.DING_DING, true)
-                    }
-                })
-                timerKit?.start()
+//                timerKit?.cancel()
+//                timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
+//                    override fun updateCountDownSeconds(seconds: Int) {
+//                        binding.countDownTimeView.text = "${seconds.formatTime()}后执行任务"
+//                        binding.countDownPgr.progress = diff - seconds
+//                    }
+//
+//                    override fun onFinish() {
+//                        binding.countDownTimeView.text = "0秒后执行任务"
+//                        binding.countDownPgr.progress = 0
+//                        requireContext().openApplication(Constant.DING_DING, true)
+//                    }
+//                })
+//                timerKit?.start()
+                countDownTimerService?.startCountDown(index + 1, diff)
             }
 
             Constant.EXECUTE_NEXT_TASK_CODE -> {

@@ -49,6 +49,9 @@
             </intent-filter>
         </service>
         <service android:name=".service.FloatingWindowService" />
+        <service
+            android:name=".service.CountDownTimerService"
+            android:foregroundServiceType="dataSync" />
     </application>
 
     <queries>
