@@ -3,7 +3,6 @@ package com.pengxh.daily.app.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
@@ -25,7 +24,7 @@ class ForegroundRunningService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val name = "${resources.getString(R.string.app_name)}前台服务"
         val channel = NotificationChannel(
             "foreground_running_service_channel", name, NotificationManager.IMPORTANCE_HIGH
