@@ -113,6 +113,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 marginOffset, marginOffset shr 1, marginOffset, marginOffset shr 1
             )
         )
+        binding.addTimerButton.attachToRecyclerView(binding.recyclerView)
 
         Intent(requireContext(), CountDownTimerService::class.java).apply {
             requireContext().bindService(this, connection, Context.BIND_AUTO_CREATE)

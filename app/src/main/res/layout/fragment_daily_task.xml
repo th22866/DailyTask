@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -103,13 +104,15 @@
                             android:background="@drawable/bg_solid_layout_black_radius_5"
                             android:drawablePadding="@dimen/dp_5"
                             android:gravity="center"
-                            android:paddingHorizontal="@dimen/dp_10"
+                            android:paddingHorizontal="@dimen/dp_5"
+                            android:singleLine="true"
                             android:text="--秒后刷新每日任务"
                             android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14"
                             app:drawableStartCompat="@drawable/ic_sand" />
                     </LinearLayout>
 
-                    <androidx.appcompat.widget.AppCompatImageView
+                    <ImageView
                         android:id="@+id/executeTaskButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -141,14 +144,17 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.melnykov.fab.FloatingActionButton
         android:id="@+id/addTimerButton"
-        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_margin="@dimen/dp_10"
+        android:backgroundTint="@color/theme_color"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_add"
-        app:tint="@color/white" />
+        app:fab_shadow="false"
+        fab:fab_colorNormal="@color/primary"
+        fab:fab_colorPressed="@color/primary_pressed"
+        fab:fab_colorRipple="@color/ripple" />
 </FrameLayout>
