@@ -128,7 +128,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         binding.timeoutTextView.text = SaveKeyValues.getValue(
-            Constant.STAY_DD_TIMEOUT_KEY, "45s"
+            Constant.STAY_DD_TIMEOUT_KEY, "30s"
         ) as String
         binding.keyTextView.text = SaveKeyValues.getValue(Constant.DING_DING_KEY, "打卡") as String
         val needRandom = SaveKeyValues.getValue(Constant.RANDOM_TIME_KEY, true) as Boolean

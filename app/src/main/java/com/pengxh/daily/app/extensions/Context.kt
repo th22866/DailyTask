@@ -7,10 +7,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationManagerCompat
 import com.pengxh.daily.app.service.FloatingWindowService
-import com.pengxh.daily.app.ui.MainActivity
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.MessageEvent
-import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 import org.greenrobot.eventbus.EventBus
 
@@ -75,18 +73,11 @@ fun Context.openApplication(packageName: String, needEmail: Boolean) {
     }
 }
 
-fun Context.backToMainActivity() {
+fun Context.backToHome() {
     EventBus.getDefault().post(MessageEvent(Constant.CANCEL_COUNT_DOWN_TIMER_CODE))
-    if (SaveKeyValues.getValue(Constant.BACK_TO_HOME_KEY, false) as Boolean) {
-        //模拟点击Home键
-        val home = Intent(Intent.ACTION_MAIN)
-        home.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        home.addCategory(Intent.CATEGORY_HOME)
-        this.startActivity(home)
-        Thread.sleep(2000)
-    }
-
-    val intent = Intent(this, MainActivity::class.java)
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-    this.startActivity(intent)
+    //模拟点击Home键
+    val home = Intent(Intent.ACTION_MAIN)
+    home.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    home.addCategory(Intent.CATEGORY_HOME)
+    this.startActivity(home)
 }

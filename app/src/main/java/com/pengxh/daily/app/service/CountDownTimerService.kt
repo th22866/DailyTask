@@ -92,6 +92,16 @@ class CountDownTimerService : Service() {
         isTimerRunning = true
     }
 
+    fun updateDailyTaskState(){
+        notificationBuilder?.let {
+            it.setContentText("当天所有任务已执行完毕")
+            it.build()
+        }.also {
+            notificationManager?.notify(notificationId, it)
+        }
+        isTimerRunning = false
+    }
+
     fun cancelCountDown() {
         if (isTimerRunning) {
             countDownTimer?.cancel()

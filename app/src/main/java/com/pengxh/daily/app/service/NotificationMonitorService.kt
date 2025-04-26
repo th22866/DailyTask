@@ -7,7 +7,7 @@ import android.service.notification.StatusBarNotification
 import android.util.Log
 import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.bean.NotificationBean
-import com.pengxh.daily.app.extensions.backToMainActivity
+import com.pengxh.daily.app.extensions.backToHome
 import com.pengxh.daily.app.extensions.openApplication
 import com.pengxh.daily.app.extensions.sendEmail
 import com.pengxh.daily.app.fragment.SettingsFragment
@@ -69,7 +69,7 @@ class NotificationMonitorService : NotificationListenerService() {
 
         if (packageName == Constant.DING_DING) {
             if (notice.contains("成功")) {
-                backToMainActivity()
+                backToHome()
                 "即将发送通知邮件，请注意查收".show(this)
                 notice.sendEmail(this, null, false)
             }

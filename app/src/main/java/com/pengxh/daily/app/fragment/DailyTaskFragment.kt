@@ -24,7 +24,7 @@ import com.pengxh.daily.app.R
 import com.pengxh.daily.app.adapter.DailyTaskAdapter
 import com.pengxh.daily.app.bean.DailyTaskBean
 import com.pengxh.daily.app.databinding.FragmentDailyTaskBinding
-import com.pengxh.daily.app.extensions.backToMainActivity
+import com.pengxh.daily.app.extensions.backToHome
 import com.pengxh.daily.app.extensions.formatTime
 import com.pengxh.daily.app.extensions.getTaskIndex
 import com.pengxh.daily.app.extensions.random
@@ -33,7 +33,6 @@ import com.pengxh.daily.app.extensions.showTimePicker
 import com.pengxh.daily.app.service.CountDownTimerService
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
-import com.pengxh.daily.app.utils.CountDownTimerKit
 import com.pengxh.daily.app.utils.MessageEvent
 import com.pengxh.daily.app.utils.OnTimeSelectedCallback
 import com.pengxh.daily.app.utils.TimeKit
@@ -69,7 +68,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private var taskBeans: MutableList<DailyTaskBean> = ArrayList()
     private var diffSeconds = AtomicInteger(0)
     private var isTaskStarted = false
-    private var timerKit: CountDownTimerKit? = null
     private var timeoutTimer: CountDownTimer? = null
     private var countDownTimerService: CountDownTimerService? = null
 
@@ -235,7 +233,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private fun stopExecuteTask(isRemote: Boolean) {
         repeatTaskHandler.removeCallbacks(repeatTaskRunnable)
         Log.d(kTag, "initEvent: 取消周期任务Runnable")
-//        timerKit?.cancel()
         countDownTimerService?.cancelCountDown()
         isTaskStarted = false
         binding.actualTimeView.text = "--:--:--"
@@ -365,20 +362,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 binding.actualTimeView.text = pair.first
                 val diff = pair.second
                 Log.d(kTag, "任务时间差是: $diff 秒")
-//                timerKit?.cancel()
-//                timerKit = CountDownTimerKit(diff, object : OnTimeCountDownCallback {
-//                    override fun updateCountDownSeconds(seconds: Int) {
-//                        binding.countDownTimeView.text = "${seconds.formatTime()}后执行任务"
-//                        binding.countDownPgr.progress = diff - seconds
-//                    }
-//
-//                    override fun onFinish() {
-//                        binding.countDownTimeView.text = "0秒后执行任务"
-//                        binding.countDownPgr.progress = 0
-//                        requireContext().openApplication(Constant.DING_DING, true)
-//                    }
-//                })
-//                timerKit?.start()
                 countDownTimerService?.startCountDown(index + 1, diff)
             }
 
@@ -391,6 +374,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 binding.tipsView.setTextColor(R.color.ios_green.convertColor(requireContext()))
                 dailyTaskAdapter.updateCurrentTaskState(-1)
                 dailyTaskHandler.removeCallbacks(dailyTaskRunnable)
+                countDownTimerService?.updateDailyTaskState()
             }
         }
         return true
@@ -423,7 +407,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
                     override fun onFinish() {
                         //如果倒计时结束，那么表明没有收到打卡成功的通知
-                        requireContext().backToMainActivity()
+                        requireContext().backToHome()
                         "未监听到打卡通知，即将发送异常日志邮件，请注意查收".show(requireContext())
                         "".sendEmail(requireContext(), null, false)
                     }

@@ -31,7 +31,6 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.navigatePageTo
 import com.pengxh.kt.lite.extensions.setScreenBrightness
-import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -97,10 +96,6 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
             }
         }
 
-        binding.backToHomeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            SaveKeyValues.putValue(Constant.BACK_TO_HOME_KEY, isChecked)
-        }
-
         binding.notificationLayout.setOnClickListener {
             requireContext().navigatePageTo<NoticeRecordActivity>()
         }
@@ -148,10 +143,6 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
         } else {
             requireContext().stopService(serviceIntent)
         }
-
-        binding.backToHomeSwitch.isChecked = SaveKeyValues.getValue(
-            Constant.BACK_TO_HOME_KEY, false
-        ) as Boolean
 
         if (requireContext().notificationEnable()) {
             binding.tipsView.text = "通知监听服务状态查询中，请稍后"
