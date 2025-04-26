@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationManagerCompat
-import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.MessageEvent
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
@@ -50,10 +49,7 @@ fun Context.openApplication(packageName: String, needEmail: Boolean) {
             }).build().show()
         return
     }
-    FloatingWindowService.weakReferenceHandler?.apply {
-        sendEmptyMessage(Constant.SHOW_FLOATING_WINDOW_CODE)
-    }
-    /***跳转钉钉开始*****************************************/
+    /**跳转钉钉开始*****************************************/
     val resolveIntent = Intent(Intent.ACTION_MAIN, null).apply {
         addCategory(Intent.CATEGORY_LAUNCHER)
         setPackage(packageName)
@@ -67,7 +63,7 @@ fun Context.openApplication(packageName: String, needEmail: Boolean) {
         component = ComponentName(info.activityInfo.packageName, info.activityInfo.name)
     }
     this.startActivity(intent)
-    /***跳转钉钉结束*****************************************/
+    /**跳转钉钉结束*****************************************/
     if (needEmail) {
         EventBus.getDefault().post(MessageEvent(Constant.START_COUNT_DOWN_TIMER_CODE))
     }
