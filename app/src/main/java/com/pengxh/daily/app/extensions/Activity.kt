@@ -7,6 +7,7 @@ import com.pengxh.daily.app.R
 import com.pengxh.daily.app.bean.DailyTaskBean
 import com.pengxh.daily.app.utils.OnTimeSelectedCallback
 import com.pengxh.kt.lite.extensions.convertColor
+import java.util.Locale
 
 /**
  * 修改时间
@@ -21,7 +22,9 @@ fun Activity.showTimePicker(dailyTaskBean: DailyTaskBean, callback: OnTimeSelect
     layout.setSelectedTextBold(true)
 
     timePicker.setOnTimePickedListener { hour, minute, seconds ->
-        callback.onTimePicked(String.format("%02d:%02d:%02d", hour, minute, seconds))
+        callback.onTimePicked(
+            String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minute, seconds)
+        )
     }
     timePicker.show()
 }
@@ -38,7 +41,9 @@ fun Activity.showTimePicker(callback: OnTimeSelectedCallback) {
     layout.setSelectedTextBold(true)
 
     timePicker.setOnTimePickedListener { hour, minute, seconds ->
-        callback.onTimePicked(String.format("%02d:%02d:%02d", hour, minute, seconds))
+        callback.onTimePicked(
+            String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minute, seconds)
+        )
     }
     timePicker.show()
 }
