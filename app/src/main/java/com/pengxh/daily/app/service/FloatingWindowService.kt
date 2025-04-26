@@ -13,7 +13,6 @@ import android.view.WindowManager
 import android.widget.TextView
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.utils.Constant
-import com.pengxh.kt.lite.extensions.getSystemService
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 
@@ -24,8 +23,7 @@ class FloatingWindowService : Service(), Handler.Callback {
         var weakReferenceHandler: WeakReferenceHandler? = null
     }
 
-    private val kTag = "FloatingWindowService"
-    private val windowManager by lazy { getSystemService<WindowManager>() }
+    private val windowManager by lazy { getSystemService(WINDOW_SERVICE) as WindowManager }
     private val floatView by lazy {
         LayoutInflater.from(this).inflate(R.layout.window_floating, null)
     }
@@ -49,7 +47,7 @@ class FloatingWindowService : Service(), Handler.Callback {
         )
 
         try {
-            windowManager?.addView(floatView, floatLayoutParams)
+            windowManager.addView(floatView, floatLayoutParams)
 
             var lastX = 0
             var lastY = 0
@@ -71,7 +69,7 @@ class FloatingWindowService : Service(), Handler.Callback {
                         floatLayoutParams.x = paramX + dx
                         floatLayoutParams.y = paramY + dy
                         // 更新悬浮窗位置
-                        windowManager?.updateViewLayout(floatView, floatLayoutParams)
+                        windowManager.updateViewLayout(floatView, floatLayoutParams)
                     }
                 }
                 false
@@ -85,7 +83,7 @@ class FloatingWindowService : Service(), Handler.Callback {
 
     override fun onDestroy() {
         super.onDestroy()
-        windowManager?.removeView(floatView)
+        windowManager.removeView(floatView)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
