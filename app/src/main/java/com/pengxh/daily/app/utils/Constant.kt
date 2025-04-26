@@ -16,6 +16,7 @@ object Constant {
     const val STAY_DD_TIMEOUT_KEY = "STAY_DD_TIMEOUT_KEY"
     const val BACK_TO_HOME_KEY = "BACK_TO_HOME_KEY"
     const val DING_DING_KEY = "DING_DING_KEY"
+    const val RANDOM_TIME_KEY = "RANDOM_TIME_KEY"
 
     const val TICK_TIME_CODE = 2024071701
     const val UPDATE_TICK_TIME_CODE = 2024071702

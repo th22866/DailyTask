@@ -59,6 +59,10 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
                 }).build().show()
         }
 
+        binding.randomTimeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            SaveKeyValues.putValue(Constant.RANDOM_TIME_KEY, isChecked)
+        }
+
         binding.outputLayout.setOnClickListener {
             val taskBeans = dailyTaskDao.loadAll()
 
@@ -127,6 +131,8 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
             Constant.STAY_DD_TIMEOUT_KEY, "45s"
         ) as String
         binding.keyTextView.text = SaveKeyValues.getValue(Constant.DING_DING_KEY, "打卡") as String
+        val needRandom = SaveKeyValues.getValue(Constant.RANDOM_TIME_KEY, true) as Boolean
+        binding.randomTimeSwitch.isChecked = needRandom
     }
 
     override fun initViewBinding(): ActivityTaskConfigBinding {

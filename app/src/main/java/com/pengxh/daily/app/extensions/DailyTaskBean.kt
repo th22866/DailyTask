@@ -2,8 +2,10 @@ package com.pengxh.daily.app.extensions
 
 import com.github.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.pengxh.daily.app.bean.DailyTaskBean
+import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.TimeKit
 import com.pengxh.kt.lite.extensions.appendZero
+import com.pengxh.kt.lite.utils.SaveKeyValues
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -14,25 +16,35 @@ fun DailyTaskBean.convertToTimeEntity(): TimeEntity {
 }
 
 fun DailyTaskBean.random(): Pair<String, Int> {
+    val needRandom = SaveKeyValues.getValue(Constant.RANDOM_TIME_KEY, true) as Boolean
+
     //18:00:59
     val array = this.time.split(":")
 
     //随机[0,5]分钟内随机
-    val seedMinute = (0 until 5).random()
-    val tempMinute = array[1].toInt() + seedMinute
-    val minute = if (tempMinute >= 60) {
-        array[1]
+    val minute = if (needRandom) {
+        val seedMinute = (0 until 5).random()
+        val tempMinute = array[1].toInt() + seedMinute
+        if (tempMinute >= 60) {
+            array[1]
+        } else {
+            tempMinute.appendZero()
+        }
     } else {
-        tempMinute.appendZero()
+        array[1]
     }
 
     //随机[0,60]秒内随机
-    val seedSeconds = (0 until 60).random()
-    val tempSeconds = array[1].toInt() + seedSeconds
-    val seconds = if (tempSeconds >= 60) {
-        array[2]
+    val seconds = if (needRandom) {
+        val seedSeconds = (0 until 60).random()
+        val tempSeconds = array[1].toInt() + seedSeconds
+        if (tempSeconds >= 60) {
+            array[2]
+        } else {
+            tempSeconds.appendZero()
+        }
     } else {
-        tempSeconds.appendZero()
+        array[2]
     }
     val newTime = "${array[0]}:${minute}:${seconds}"
 
