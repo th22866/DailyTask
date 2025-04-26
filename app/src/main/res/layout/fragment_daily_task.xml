@@ -144,7 +144,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <com.melnykov.fab.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addTimerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
         android:backgroundTint="@color/theme_color"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_add"
-        app:fab_shadow="false"
+        app:tint="@color/white"
         fab:fab_colorNormal="@color/primary"
         fab:fab_colorPressed="@color/primary_pressed"
         fab:fab_colorRipple="@color/ripple" />
