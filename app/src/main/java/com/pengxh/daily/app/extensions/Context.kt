@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationManagerCompat
+import com.pengxh.daily.app.ui.MainActivity
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.MessageEvent
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
@@ -23,6 +24,8 @@ fun Context.notificationEnable(): Boolean {
  * 打开指定包名的apk
  */
 fun Context.openApplication(packageName: String, needEmail: Boolean) {
+    //亮屏
+    MainActivity.weakReferenceHandler?.sendEmptyMessage(1)
     val pm = this.packageManager
     val isContains = try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
