@@ -13,8 +13,8 @@ android {
         applicationId = 'com.pengxh.daily.app'
         minSdk = 26
         targetSdk = 35
-        versionCode = 3000
-        versionName = '3.0.0'
+        versionCode = 3001
+        versionName = '3.0.0.1'
     }
 
     flavorDimensions += 'versionCode'
@@ -63,7 +63,7 @@ android {
 
     applicationVariants.configureEach {
         outputs.configureEach {
-            outputFileName = "DT_${getBuildDate()}_${android.defaultConfig.versionName}.apk"
+            outputFileName = "DT_${getBuildDate()}_${android.defaultConfig.versionName}_内测版.apk"
         }
     }
 }
@@ -99,7 +99,7 @@ dependencies {
     implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
     //数据库框架
     implementation 'androidx.room:room-runtime:2.6.1'
-    annotationProcessor 'androidx.room:room-compiler:2.5.1'
+    annotationProcessor 'androidx.room:room-compiler:2.5.2'
     //邮件
     implementation 'com.sun.mail:android-mail:1.6.6'
     implementation 'com.sun.mail:android-activation:1.6.6'
