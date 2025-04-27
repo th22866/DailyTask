@@ -105,6 +105,14 @@ class FloatingWindowService : Service(), Handler.Callback {
                 val time = msg.obj as String
                 textView.text = time
             }
+
+            Constant.SHOW_FLOATING_WINDOW_CODE -> {
+                floatView.alpha = 1.0f
+            }
+
+            Constant.HIDE_FLOATING_WINDOW_CODE -> {
+                floatView.alpha = 0.0f
+            }
         }
         return true
     }

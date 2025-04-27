@@ -24,7 +24,7 @@ import com.pengxh.daily.app.R
 import com.pengxh.daily.app.adapter.DailyTaskAdapter
 import com.pengxh.daily.app.bean.DailyTaskBean
 import com.pengxh.daily.app.databinding.FragmentDailyTaskBinding
-import com.pengxh.daily.app.extensions.backToHome
+import com.pengxh.daily.app.extensions.backToMainActivity
 import com.pengxh.daily.app.extensions.formatTime
 import com.pengxh.daily.app.extensions.getTaskIndex
 import com.pengxh.daily.app.extensions.random
@@ -412,7 +412,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
                     override fun onFinish() {
                         //如果倒计时结束，那么表明没有收到打卡成功的通知
-                        requireContext().backToHome()
+                        requireContext().backToMainActivity()
                         "未监听到打卡通知，即将发送异常日志邮件，请注意查收".show(requireContext())
                         "".sendEmail(requireContext(), null, false)
                     }
