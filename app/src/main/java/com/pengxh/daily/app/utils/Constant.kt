@@ -43,4 +43,5 @@ object Constant {
     const val ZFB = "com.eg.android.AlipayGphone"
 
     const val FOREGROUND_RUNNING_SERVICE_TITLE = "应用前台保活服务，请勿关闭此通知"
+    const val DEFAULT_OVER_TIME = "30s"
 }

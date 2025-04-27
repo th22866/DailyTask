@@ -391,7 +391,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         when (event.code) {
             Constant.START_COUNT_DOWN_TIMER_CODE -> {
                 Log.d(kTag, "onMessageEvent: 开始超时倒计时")
-                val time = SaveKeyValues.getValue(Constant.STAY_DD_TIMEOUT_KEY, "45s") as String
+                val time = SaveKeyValues.getValue(
+                    Constant.STAY_DD_TIMEOUT_KEY, Constant.DEFAULT_OVER_TIME
+                ) as String
                 //去掉时间的s
                 val timeValue = time.dropLast(1).toInt()
                 timeoutTimer = object : CountDownTimer(timeValue * 1000L, 1000) {
