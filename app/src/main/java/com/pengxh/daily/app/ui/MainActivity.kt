@@ -43,8 +43,6 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     private val fragmentPages = ArrayList<Fragment>()
     private var menuItem: MenuItem? = null
     private lateinit var insetsController: WindowInsetsControllerCompat
-    private lateinit var keyguardLock: KeyguardManager.KeyguardLock
-    private lateinit var wakeLock: PowerManager.WakeLock
 
     init {
         fragmentPages.add(DailyTaskFragment())
@@ -78,11 +76,19 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
                 }).build().show()
         }
 
-        keyguardLock = keyguardManager.newKeyguardLock("KEY_GUARD_TAG")
-        wakeLock = powerManager.newWakeLock(
+        val keyguardLock = keyguardManager.newKeyguardLock("KEY_GUARD_TAG")
+        val wakeLock = powerManager.newWakeLock(
             PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
             "${resources.getString(R.string.app_name)}:WAKE_LOCK_TAG"
         )
+        broadcastManager.addAction(object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (binding.maskView.isVisible) {
+                    keyguardLock.disableKeyguard()
+                    wakeLock.acquire(1000)
+                }
+            }
+        }, Intent.ACTION_SCREEN_OFF)
     }
 
     override fun initEvent() {
@@ -120,14 +126,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     }
 
     override fun observeRequestState() {
-        broadcastManager.addAction(object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (binding.maskView.isVisible) {
-                    keyguardLock.disableKeyguard()
-                    wakeLock.acquire(1000)
-                }
-            }
-        }, Intent.ACTION_SCREEN_OFF)
+
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -189,5 +188,10 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
                 sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        broadcastManager.destroy(Intent.ACTION_SCREEN_OFF)
     }
 }
