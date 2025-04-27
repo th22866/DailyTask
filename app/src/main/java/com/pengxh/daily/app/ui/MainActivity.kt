@@ -1,7 +1,11 @@
 package com.pengxh.daily.app.ui
 
+import android.app.KeyguardManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.PowerManager
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
@@ -26,17 +30,21 @@ import com.pengxh.daily.app.service.ForegroundRunningService
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.extensions.setScreenBrightness
-import com.pengxh.kt.lite.extensions.show
+import com.pengxh.kt.lite.utils.BroadcastManager
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     private val kTag = "MainActivity"
+    private val broadcastManager by lazy { BroadcastManager(this) }
+    private val keyguardManager by lazy { getSystemService(KEYGUARD_SERVICE) as KeyguardManager }
+    private val powerManager by lazy { getSystemService(POWER_SERVICE) as PowerManager }
     private val fragmentPages = ArrayList<Fragment>()
     private var menuItem: MenuItem? = null
-    private var clickTime: Long = 0
     private lateinit var insetsController: WindowInsetsControllerCompat
+    private lateinit var keyguardLock: KeyguardManager.KeyguardLock
+    private lateinit var wakeLock: PowerManager.WakeLock
 
     init {
         fragmentPages.add(DailyTaskFragment())
@@ -69,6 +77,12 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
                     }
                 }).build().show()
         }
+
+        keyguardLock = keyguardManager.newKeyguardLock("KEY_GUARD_TAG")
+        wakeLock = powerManager.newWakeLock(
+            PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+            "${resources.getString(R.string.app_name)}:WAKE_LOCK_TAG"
+        )
     }
 
     override fun initEvent() {
@@ -106,7 +120,14 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     }
 
     override fun observeRequestState() {
-
+        broadcastManager.addAction(object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (binding.maskView.isVisible) {
+                    keyguardLock.disableKeyguard()
+                    wakeLock.acquire(1000)
+                }
+            }
+        }, Intent.ACTION_SCREEN_OFF)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -152,14 +173,9 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
                 return true
             }
 
-            KeyEvent.KEYCODE_BACK -> {
-                return if (System.currentTimeMillis() - clickTime > 2000) {
-                    "再按一次退出应用".show(this)
-                    clickTime = System.currentTimeMillis()
-                    true
-                } else {
-                    super.onKeyDown(keyCode, event)
-                }
+            KeyEvent.KEYCODE_POWER -> {
+                //拦截电源按键
+                return true
             }
         }
         return super.onKeyDown(keyCode, event)
