@@ -18,8 +18,7 @@ object EmailConfigKit {
 
     fun isEmailConfigured(): Boolean {
         val config = getConfig()
-        return config.emailSender.isNotEmpty() && config.authCode.isNotEmpty()
-                && config.senderServer.isNotEmpty() && config.emailPort.isNotEmpty()
-                && config.inboxEmail.isNotEmpty()
+        return config.emailSender != "" && config.authCode != "" && config.senderServer != "" &&
+                config.emailPort != "" && config.inboxEmail != ""
     }
 }
