@@ -27,7 +27,6 @@
             app:menu="@menu/bottom_nav_menu" />
     </LinearLayout>
 
-
     <RelativeLayout
         android:id="@+id/maskView"
         android:layout_width="match_parent"
