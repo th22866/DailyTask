@@ -33,7 +33,7 @@ jobs:
       - name: Extract version name from build.gradle
         id: extract-version
         run: |
-          VERSION_NAME=$(grep -oP "versionName\s*=\s*'\K[0-9.]*'" app/build.gradle | tr -d "'")
+          VERSION_NAME=$(grep -oP "versionName\s*=\s*'\K[0-9.]*(?=')" app/build.gradle)
           echo "Extracted VERSION_NAME: $VERSION_NAME"
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
 
@@ -49,11 +49,15 @@ jobs:
         run: ls -la app/build/outputs/
 
       - name: List APK files in release directory
-        if: steps.list-build-outputs.outputs.release_dir == 'true'
-        run: ls -la app/build/outputs/apk/release/
+        run: |
+          if [ -d "app/build/outputs/apk/release" ]; then
+            ls -la app/build/outputs/apk/release/
+          else
+            echo "app/build/outputs/apk/release/ directory does not exist"
+            exit 1
+          fi
 
       - name: Rename APK
-        if: steps.list-build-outputs.outputs.release_dir == 'true'
         run: |
           APK_PATH="app/build/outputs/apk/release/app-release.apk"
           NEW_APK_NAME="DT_${CURRENT_DATE}_${VERSION_NAME}.apk"
@@ -65,7 +69,6 @@ jobs:
           fi
 
       - name: Upload APK
-        if: steps.list-build-outputs.outputs.release_dir == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: app-release
