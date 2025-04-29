@@ -30,17 +30,31 @@ jobs:
         id: get-date
         run: echo "CURRENT_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
 
+      - name: Extract version name from build.gradle
+        id: extract-version
+        run: |
+          VERSION_NAME=$(grep -oP "versionName\s*=\s*'\K[0-9.]*" app/build.gradle)
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+
       - name: Build with Gradle
         run: ./gradlew assembleRelease
+
+      - name: List APK files in release directory
+        run: ls -la app/build/outputs/apk/release/
 
       - name: Rename APK
         run: |
           APK_PATH="app/build/outputs/apk/release/app-release.apk"
-          NEW_APK_NAME="DT_${CURRENT_DATE}_2.1.0.apk"
-          mv $APK_PATH "app/build/outputs/apk/release/$NEW_APK_NAME"
+          NEW_APK_NAME="DT_${CURRENT_DATE}_${VERSION_NAME}.apk"
+          if [ -f "$APK_PATH" ]; then
+            mv "$APK_PATH" "app/build/outputs/apk/release/$NEW_APK_NAME"
+          else
+            echo "APK file not found at $APK_PATH"
+            exit 1
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/DT_${CURRENT_DATE}_2.1.0.apk
+          path: app/build/outputs/apk/release/DT_${CURRENT_DATE}_${VERSION_NAME}.apk
