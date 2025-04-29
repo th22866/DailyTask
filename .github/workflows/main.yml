@@ -31,13 +31,16 @@ jobs:
         run: echo "CURRENT_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease -PoutputApkName=DT_${CURRENT_DATE}_2.1.0.apk
+        run: ./gradlew assembleRelease
 
       - name: Rename APK
-        run: mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/DT_${CURRENT_DATE}_2.1.0.apk
+        run: |
+          APK_PATH="app/build/outputs/apk/release/app-release.apk"
+          NEW_APK_NAME="DT_${CURRENT_DATE}_2.1.0.apk"
+          mv $APK_PATH "app/build/outputs/apk/release/$NEW_APK_NAME"
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release
           path: app/build/outputs/apk/release/DT_${CURRENT_DATE}_2.1.0.apk
