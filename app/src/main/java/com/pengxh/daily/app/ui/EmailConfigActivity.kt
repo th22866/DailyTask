@@ -154,7 +154,7 @@ class EmailConfigActivity : KotlinBaseActivity<ActivityEmailConfigBinding>(), Ha
 
         binding.sendEmailButton.setOnClickListener {
             if (!EmailConfigKit.isEmailConfigured()) {
-                "请先保存邮箱配置".show(context)
+                "请先保存邮箱配置".show(this)
                 return@setOnClickListener
             }
             LoadingDialog.show(this, "邮件发送中，请稍后....")

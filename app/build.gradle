@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    namespace = 'com.pengxh.daily.app'
-    compileSdk = 35
+    namespace 'com.pengxh.daily.app'
+    compileSdk 35
 
     defaultConfig {
-        applicationId = 'com.pengxh.daily.app'
-        minSdk = 26
-        targetSdk = 35
-        versionCode = 2100
-        versionName = '2.1.0'
+        applicationId 'com.pengxh.daily.app'
+        minSdk 26
+        targetSdk 35
+        versionCode 2100
+        versionName '2.1.0'
     }
 
     flavorDimensions += 'versionCode'
@@ -49,8 +49,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -58,8 +58,8 @@ android {
     }
 
     buildFeatures {
-        buildConfig = true
-        viewBinding = true
+        buildConfig true
+        viewBinding true
     }
 
     applicationVariants.configureEach {
