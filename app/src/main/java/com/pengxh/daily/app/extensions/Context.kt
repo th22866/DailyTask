@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import androidx.core.app.NotificationManagerCompat
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.ui.MainActivity
@@ -77,16 +79,25 @@ fun Context.openApplication(packageName: String, needEmail: Boolean) {
 
 fun Context.backToMainActivity() {
     EventBus.getDefault().post(MessageEvent(Constant.CANCEL_COUNT_DOWN_TIMER_CODE))
-    if (SaveKeyValues.getValue(Constant.BACK_TO_HOME_KEY, false) as Boolean) {
+    val backToHome = SaveKeyValues.getValue(Constant.BACK_TO_HOME_KEY, false) as Boolean
+    if (backToHome) {
         //模拟点击Home键
-        val home = Intent(Intent.ACTION_MAIN)
-        home.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        home.addCategory(Intent.CATEGORY_HOME)
-        this.startActivity(home)
-        Thread.sleep(2000)
+        val home = Intent(Intent.ACTION_MAIN).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            addCategory(Intent.CATEGORY_HOME)
+        }
+        startActivity(home)
+        Handler(Looper.getMainLooper()).postDelayed({
+            launchMainActivity()
+        }, 2000)
+    } else {
+        launchMainActivity()
     }
+}
 
-    val intent = Intent(this, MainActivity::class.java)
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-    this.startActivity(intent)
+private fun Context.launchMainActivity() {
+    val intent = Intent(this, MainActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+    }
+    startActivity(intent)
 }
