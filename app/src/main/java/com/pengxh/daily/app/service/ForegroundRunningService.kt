@@ -39,7 +39,9 @@ class ForegroundRunningService : Service() {
         )
         channel.description = "Channel for Foreground Running Service"
         notificationManager.createNotificationChannel(channel)
-        startForeground(notificationId, notificationBuilder.build())
+        notificationBuilder.build().apply {
+            notificationManager.notify(notificationId, this)
+        }
     }
 
     override fun onDestroy() {
