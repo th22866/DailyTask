@@ -14,18 +14,10 @@ import com.pengxh.daily.app.utils.Constant
  * */
 class ForegroundRunningService : Service() {
 
-    private val notificationId = 1
+    private val notificationId = Int.MAX_VALUE
     private val notificationManager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
-
-    override fun onCreate() {
-        super.onCreate()
-        val name = "${resources.getString(R.string.app_name)}前台服务"
-        val channel = NotificationChannel(
-            "foreground_running_service_channel", name, NotificationManager.IMPORTANCE_HIGH
-        )
-        channel.description = "Channel for Foreground Running Service"
-        notificationManager.createNotificationChannel(channel)
-        NotificationCompat.Builder(this, "foreground_running_service_channel").run {
+    private val notificationBuilder by lazy {
+        NotificationCompat.Builder(this, "foreground_running_service_channel").apply {
             setSmallIcon(R.mipmap.ic_launcher)
             setContentText(Constant.FOREGROUND_RUNNING_SERVICE_TITLE)
             setPriority(NotificationCompat.PRIORITY_HIGH) // 设置通知优先级
@@ -36,14 +28,18 @@ class ForegroundRunningService : Service() {
             setShowWhen(true)
             setSound(null) // 禁用声音
             setVibrate(null) // 禁用振动
-            build()
-        }.also {
-            startForeground(notificationId, it)
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return START_STICKY
+    override fun onCreate() {
+        super.onCreate()
+        val name = "${resources.getString(R.string.app_name)}前台服务"
+        val channel = NotificationChannel(
+            "foreground_running_service_channel", name, NotificationManager.IMPORTANCE_HIGH
+        )
+        channel.description = "Channel for Foreground Running Service"
+        notificationManager.createNotificationChannel(channel)
+        startForeground(notificationId, notificationBuilder.build())
     }
 
     override fun onDestroy() {
@@ -51,7 +47,5 @@ class ForegroundRunningService : Service() {
         stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 }

@@ -21,9 +21,24 @@ class CountDownTimerService : Service() {
 
     private val kTag = "CountDownTimerService"
     private val binder by lazy { LocaleBinder() }
-    private val notificationId = Int.MAX_VALUE
-    private var notificationManager: NotificationManager? = null
-    private var notificationBuilder: NotificationCompat.Builder? = null
+    private val notificationManager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
+    private val notificationBuilder by lazy {
+        NotificationCompat.Builder(this, "countdown_timer_service_channel").apply {
+            setSmallIcon(R.mipmap.ic_launcher)
+            setContentText("倒计时服务已就绪")
+            setPriority(NotificationCompat.PRIORITY_MIN)
+            setOngoing(true)
+            setOnlyAlertOnce(true)
+            setSilent(true)
+            setCategory(NotificationCompat.CATEGORY_SERVICE)
+            setShowWhen(true)
+            setSound(null)
+            setVibrate(null)
+        }
+    }
+    private val notificationId = 1
+    private var countDownTimer: CountDownTimer? = null
+    private var isTimerRunning = false
 
     inner class LocaleBinder : Binder() {
         fun getService(): CountDownTimerService = this@CountDownTimerService
@@ -40,46 +55,29 @@ class CountDownTimerService : Service() {
             "countdown_timer_service_channel", name, NotificationManager.IMPORTANCE_HIGH
         )
         channel.description = "Channel for CountDownTimer Service"
-        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager?.createNotificationChannel(channel)
-        notificationBuilder = NotificationCompat.Builder(
-            this, "countdown_timer_service_channel"
-        ).run {
-            setSmallIcon(R.mipmap.ic_launcher)
-            setContentText("倒计时服务已就绪")
-            setPriority(NotificationCompat.PRIORITY_MIN) // 设置通知优先级
-            setOngoing(true)
-            setOnlyAlertOnce(true)
-            setSilent(true)
-            setCategory(NotificationCompat.CATEGORY_SERVICE)
-            setShowWhen(true)
-            setSound(null) // 禁用声音
-            setVibrate(null) // 禁用振动
-        }
-        notificationBuilder?.build().also {
-            startForeground(notificationId, it)
-        }
+        notificationManager.createNotificationChannel(channel)
     }
 
-    private var countDownTimer: CountDownTimer? = null
-    private var isTimerRunning = false
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForeground(notificationId, notificationBuilder.build())
+        return START_STICKY
+    }
 
     fun startCountDown(index: Int, seconds: Int) {
         if (isTimerRunning) {
             countDownTimer?.cancel()
+            countDownTimer = null
             isTimerRunning = false
         }
         Log.d(kTag, "startCountDown: 倒计时任务开始，执行第${index}个任务")
         countDownTimer = object : CountDownTimer(seconds * 1000L, 1000L) {
             override fun onTick(millisUntilFinished: Long) {
-                notificationBuilder?.let {
-                    it.setContentText(
+                val notification = notificationBuilder.apply {
+                    setContentText(
                         "${(millisUntilFinished / 1000).toInt().formatTime()}后执行第${index}个任务"
                     )
-                    it.build()
-                }.also {
-                    notificationManager?.notify(notificationId, it)
-                }
+                }.build()
+                notificationManager.notify(notificationId, notification)
             }
 
             override fun onFinish() {
@@ -92,25 +90,22 @@ class CountDownTimerService : Service() {
         isTimerRunning = true
     }
 
-    fun updateDailyTaskState(){
-        notificationBuilder?.let {
-            it.setContentText("当天所有任务已执行完毕")
-            it.build()
-        }.also {
-            notificationManager?.notify(notificationId, it)
-        }
+    fun updateDailyTaskState() {
+        val notification = notificationBuilder.apply {
+            setContentText("当天所有任务已执行完毕")
+        }.build()
+        notificationManager.notify(notificationId, notification)
         isTimerRunning = false
     }
 
     fun cancelCountDown() {
         if (isTimerRunning) {
             countDownTimer?.cancel()
-            notificationBuilder?.let {
-                it.setContentText("倒计时任务已停止")
-                it.build()
-            }.also {
-                notificationManager?.notify(notificationId, it)
-            }
+            countDownTimer = null
+            val notification = notificationBuilder.apply {
+                setContentText("倒计时任务已停止")
+            }.build()
+            notificationManager.notify(notificationId, notification)
             isTimerRunning = false
         }
         Log.d(kTag, "cancelCountDown: 倒计时任务取消")
