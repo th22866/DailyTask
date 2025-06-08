@@ -26,13 +26,21 @@ class DailyTaskAdapter(
 
     fun updateCurrentTaskState(position: Int) {
         this.mPosition = position
-        notifyDataSetChanged()
+        if (position < 0 || position >= dataBeans.size) {
+            notifyItemChanged(0)
+        } else {
+            notifyItemChanged(mPosition)
+        }
     }
 
     fun updateCurrentTaskState(position: Int, actualTime: String) {
         this.mPosition = position
         this.actualTime = actualTime
-        notifyDataSetChanged()
+        if (position < 0 || position >= dataBeans.size) {
+            notifyItemChanged(0)
+        } else {
+            notifyItemChanged(mPosition)
+        }
     }
 
     override fun getItemCount(): Int = dataBeans.size
