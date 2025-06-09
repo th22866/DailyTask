@@ -48,10 +48,10 @@ fun DailyTaskBean.diffCurrent(): Pair<String, Int> {
     }
     val newTime = "${array[0]}:${minute}:${seconds}"
 
-    //获取当前日期，拼给任务时间，不然不好计算时间差
+    //获取当前日期，计算时间差
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-    val taskTime = "${TimeKit.getTodayDate()} $newTime"
-    val taskDate = simpleDateFormat.parse(taskTime) ?: return Pair(newTime, 0)
+    val taskDateTime = "${TimeKit.getTodayDate()} $newTime"
+    val taskDate = simpleDateFormat.parse(taskDateTime) ?: return Pair(newTime, 0)
     val currentMillis = System.currentTimeMillis()
     val diffSeconds = (taskDate.time - currentMillis) / 1000
     return Pair(newTime, diffSeconds.toInt())
