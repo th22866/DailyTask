@@ -8,7 +8,6 @@ public class NotificationBean {
     @PrimaryKey(autoGenerate = true)
     private int id;//主键ID
 
-    private String uuid;
     private String packageName;
     private String notificationTitle;
     private String notificationMsg;
@@ -20,14 +19,6 @@ public class NotificationBean {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getPackageName() {

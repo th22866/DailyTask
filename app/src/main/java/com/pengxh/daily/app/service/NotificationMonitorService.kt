@@ -17,7 +17,6 @@ import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import org.greenrobot.eventbus.EventBus
-import java.util.UUID
 
 /**
  * @description: 状态栏监听服务
@@ -57,7 +56,6 @@ class NotificationMonitorService : NotificationListenerService() {
 
         if (notice != Constant.FOREGROUND_RUNNING_SERVICE_TITLE && packageName != "android") {
             NotificationBean().apply {
-                uuid = UUID.randomUUID().toString()
                 this.packageName = packageName //重复冲突，this关键字指明是哪个
                 notificationTitle = title
                 notificationMsg = notice

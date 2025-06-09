@@ -25,9 +25,9 @@ import com.pengxh.daily.app.adapter.DailyTaskAdapter
 import com.pengxh.daily.app.bean.DailyTaskBean
 import com.pengxh.daily.app.databinding.FragmentDailyTaskBinding
 import com.pengxh.daily.app.extensions.backToMainActivity
+import com.pengxh.daily.app.extensions.diffCurrent
 import com.pengxh.daily.app.extensions.formatTime
 import com.pengxh.daily.app.extensions.getTaskIndex
-import com.pengxh.daily.app.extensions.random
 import com.pengxh.daily.app.extensions.sendEmail
 import com.pengxh.daily.app.extensions.showTimePicker
 import com.pengxh.daily.app.service.CountDownTimerService
@@ -235,7 +235,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         Log.d(kTag, "initEvent: 取消周期任务Runnable")
         countDownTimerService?.cancelCountDown()
         isTaskStarted = false
-        binding.actualTimeView.text = "--:--:--"
         binding.repeatTimeView.text = "--秒后刷新每日任务"
         binding.executeTaskButton.setImageResource(R.mipmap.ic_start)
         binding.tipsView.text = ""
@@ -357,9 +356,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 binding.tipsView.text = "即将执行第 ${index + 1} 个任务"
                 binding.tipsView.setTextColor(R.color.theme_color.convertColor(requireContext()))
 
-                val pair = task.random()
+                val pair = task.diffCurrent()
                 dailyTaskAdapter.updateCurrentTaskState(index, pair.first)
-                binding.actualTimeView.text = pair.first
                 val diff = pair.second
                 Log.d(kTag, "任务时间差是: $diff 秒")
                 "即将执行第 ${index + 1} 个任务，任务时间点是: ${task.time}".sendEmail(

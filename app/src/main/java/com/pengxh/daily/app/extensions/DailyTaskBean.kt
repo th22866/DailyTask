@@ -15,7 +15,7 @@ fun DailyTaskBean.convertToTimeEntity(): TimeEntity {
     return TimeEntity.target(date)
 }
 
-fun DailyTaskBean.random(): Pair<String, Int> {
+fun DailyTaskBean.diffCurrent(): Pair<String, Int> {
     val needRandom = SaveKeyValues.getValue(Constant.RANDOM_TIME_KEY, true) as Boolean
 
     //18:00:59
