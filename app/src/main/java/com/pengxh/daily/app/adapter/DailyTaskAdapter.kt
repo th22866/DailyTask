@@ -35,7 +35,7 @@ class DailyTaskAdapter(
         if (position < 0 || position >= dataBeans.size) {
             return
         }
-        notifyItemChanged(mPosition)
+        notifyItemRangeChanged(0, mPosition + 1)
     }
 
     override fun getItemCount(): Int = dataBeans.size
