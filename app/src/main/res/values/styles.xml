@@ -6,4 +6,10 @@
         <!-- 指定消失的动画xml -->
         <item name="android:windowExitAnimation">@anim/popup_hide</item>
     </style>
+
+    <!--ShapeableImageView 圆角-->
+    <style name="RoundedStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
 </resources>
