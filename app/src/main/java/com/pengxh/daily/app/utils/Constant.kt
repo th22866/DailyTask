@@ -41,11 +41,12 @@ object Constant {
     const val START_DAILY_TASK_CODE = 2025030701
     const val STOP_DAILY_TASK_CODE = 2025030702
 
-    const val DING_DING = "com.alibaba.android.rimet"
-    const val WECHAT = "com.tencent.mm"
-    const val QQ = "com.tencent.mobileqq"
-    const val TIM = "com.tencent.tim"
-    const val ZFB = "com.eg.android.AlipayGphone"
+    const val DING_DING = "com.alibaba.android.rimet" // 钉钉
+    const val WECHAT = "com.tencent.mm" // 微信
+    const val WEWORK = "com.tencent.wework" // 企业微信
+    const val QQ = "com.tencent.mobileqq" // QQ
+    const val TIM = "com.tencent.tim" // TIM
+    const val ZFB = "com.eg.android.AlipayGphone" // 支付宝
 
     const val FOREGROUND_RUNNING_SERVICE_TITLE = "为保证程序正常运行，请勿移除此通知"
     const val DEFAULT_OVER_TIME = "30s"
