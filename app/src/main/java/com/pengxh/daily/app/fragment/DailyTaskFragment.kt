@@ -1,6 +1,5 @@
 package com.pengxh.daily.app.fragment
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -54,7 +53,6 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.atomic.AtomicInteger
 
 
-@SuppressLint("NotifyDataSetChanged", "SetTextI18n")
 class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handler.Callback {
 
     private val kTag = "DailyTaskFragment"
@@ -259,7 +257,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 dailyTaskDao.insert(bean)
                 taskBeans.add(bean)
                 taskBeans.sortBy { x -> x.time }
-                dailyTaskAdapter.notifyDataSetChanged()
+                dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
                 binding.emptyView.visibility = View.GONE
             }
         })
