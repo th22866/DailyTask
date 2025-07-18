@@ -214,8 +214,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             )
             return
         }
-        //计算当前时间距离0点的时间差
-        diffSeconds.set(TimeKit.getNextMidnightSeconds())
+        diffSeconds.set(TimeKit.getResetTaskSeconds())
         repeatTaskHandler.post(repeatTaskRunnable)
         Log.d(kTag, "initEvent: 开启周期任务Runnable")
         executeDailyTask()
@@ -314,8 +313,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 }
                 repeatTaskHandler.postDelayed(this, 1000)
             } else {
-                // 零点，刷新任务，并重启repeatTaskRunnable
-                diffSeconds.set(TimeKit.getNextMidnightSeconds())
+                // 刷新任务，并重启repeatTaskRunnable
+                diffSeconds.set(TimeKit.getResetTaskSeconds())
                 // 确保移除旧的回调
                 repeatTaskHandler.removeCallbacks(this)
                 repeatTaskHandler.post(this)

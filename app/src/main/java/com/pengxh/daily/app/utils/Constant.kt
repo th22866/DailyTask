@@ -16,6 +16,7 @@ object Constant {
     const val BACK_TO_HOME_KEY = "BACK_TO_HOME_KEY"
     const val TASK_NAME_KEY = "TASK_KEY"
     const val RANDOM_TIME_KEY = "RANDOM_TIME_KEY"
+    const val RESET_TIME_KEY = "RESET_TIME_KEY"
 
     const val TICK_TIME_CODE = 2024071701
     const val UPDATE_TICK_TIME_CODE = 2024071702
@@ -47,5 +48,6 @@ object Constant {
     const val ZFB = "com.eg.android.AlipayGphone" // 支付宝
 
     const val FOREGROUND_RUNNING_SERVICE_TITLE = "为保证程序正常运行，请勿移除此通知"
+    const val DEFAULT_RESET_HOUR = 0
     const val DEFAULT_OVER_TIME = "30s"
 }

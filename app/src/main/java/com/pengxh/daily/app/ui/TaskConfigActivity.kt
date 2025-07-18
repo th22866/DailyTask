@@ -24,11 +24,24 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
 
     private val kTag = "TaskConfigActivity"
     private val context = this
+    private val hourArray = arrayListOf("0", "1", "2", "3", "4", "5", "6", "自定义（单位：时）")
     private val timeArray = arrayListOf("15s", "30s", "45s", "自定义（单位：秒）")
     private val dailyTaskDao by lazy { DailyTaskApplication.get().dataBase.dailyTaskDao() }
     private val clipboard by lazy { getSystemService<ClipboardManager>() }
 
     override fun initEvent() {
+        binding.resetTimeLayout.setOnClickListener {
+            BottomActionSheet.Builder()
+                .setContext(this)
+                .setActionItemTitle(hourArray)
+                .setItemTextColor(R.color.theme_color.convertColor(this))
+                .setOnActionSheetListener(object : BottomActionSheet.OnActionSheetListener {
+                    override fun onActionItemClick(position: Int) {
+                        setHourByPosition(position)
+                    }
+                }).build().show()
+        }
+
         binding.timeoutLayout.setOnClickListener {
             BottomActionSheet.Builder()
                 .setContext(this)
@@ -85,8 +98,36 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
         }
     }
 
+    private fun setHourByPosition(position: Int) {
+        if (position == hourArray.size - 1) {
+            AlertInputDialog.Builder()
+                .setContext(this)
+                .setTitle("设置重置时间")
+                .setHintMessage("直接输入整数时间即可，如：6")
+                .setNegativeButton("取消")
+                .setPositiveButton("确定")
+                .setOnDialogButtonClickListener(object :
+                    AlertInputDialog.OnDialogButtonClickListener {
+                    override fun onConfirmClick(value: String) {
+                        if (value.isNumber()) {
+                            binding.resetTimeView.text = "每天${value}点"
+                            SaveKeyValues.putValue(Constant.RESET_TIME_KEY, value.toInt())
+                        } else {
+                            "直接输入整数时间即可".show(context)
+                        }
+                    }
+
+                    override fun onCancelClick() {}
+                }).build().show()
+        } else {
+            val hour = hourArray[position]
+            binding.resetTimeView.text = "每天${hour}点"
+            SaveKeyValues.putValue(Constant.RESET_TIME_KEY, hour.toInt())
+        }
+    }
+
     private fun setTimeByPosition(position: Int) {
-        if (position == 3) {
+        if (position == timeArray.size - 1) {
             AlertInputDialog.Builder()
                 .setContext(this)
                 .setTitle("设置超时时间")
@@ -127,6 +168,10 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
+        val hour = SaveKeyValues.getValue(
+            Constant.RESET_TIME_KEY, Constant.DEFAULT_RESET_HOUR
+        ) as Int
+        binding.resetTimeView.text = "每天${hour}点"
         binding.timeoutTextView.text = SaveKeyValues.getValue(
             Constant.STAY_DD_TIMEOUT_KEY, Constant.DEFAULT_OVER_TIME
         ) as String
