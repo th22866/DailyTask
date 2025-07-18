@@ -3,6 +3,8 @@ package com.pengxh.daily.app.extensions
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.core.app.NotificationManagerCompat
@@ -26,12 +28,23 @@ fun Context.notificationEnable(): Boolean {
  * 打开指定包名的apk
  */
 fun Context.openApplication(needEmail: Boolean) {
-    val packageName = SaveKeyValues.getValue(Constant.TARGET_APP_PACKAGE_KEY, "") as String
-    if (packageName == "") {
+    val pm = this.packageManager
+    val isContains = try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            pm.getPackageInfo(Constant.DING_DING, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            pm.getPackageInfo(Constant.DING_DING, 0)
+        }
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        false
+    }
+    if (!isContains) {
         AlertMessageDialog.Builder()
             .setContext(this)
-            .setTitle("温馨提示")
-            .setMessage("未指定目标软件，无法打开")
+            .setTitle("温馨提醒")
+            .setMessage("手机没有安装《钉钉》软件，无法自动打卡")
             .setPositiveButton("知道了")
             .setOnDialogButtonClickListener(object :
                 AlertMessageDialog.OnDialogButtonClickListener {
@@ -48,9 +61,9 @@ fun Context.openApplication(needEmail: Boolean) {
     /**跳转钉钉开始*****************************************/
     val resolveIntent = Intent(Intent.ACTION_MAIN, null).apply {
         addCategory(Intent.CATEGORY_LAUNCHER)
-        setPackage(packageName)
+        setPackage(Constant.DING_DING)
     }
-    val apps = this.packageManager.queryIntentActivities(resolveIntent, 0)
+    val apps = pm.queryIntentActivities(resolveIntent, 0)
     //前面已经判断过钉钉是否安装，所以此处一定有值
     val info = apps.first()
     val intent = Intent(Intent.ACTION_MAIN).apply {

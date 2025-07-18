@@ -34,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.SelectTargetAppActivity" />
         <activity android:name=".ui.EmailConfigActivity" />
         <activity android:name=".ui.TaskConfigActivity" />
         <activity android:name=".ui.NoticeRecordActivity" />

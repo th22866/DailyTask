@@ -65,21 +65,15 @@ class NotificationMonitorService : NotificationListenerService() {
             }
         }
 
-        val targetPackageName = SaveKeyValues.getValue(
-            Constant.TARGET_APP_PACKAGE_KEY, ""
-        ) as String
-        if (targetPackageName == "") {
-            "未指定目标软件，通知监听将无法正常工作".show(this)
-            return
+        // 钉钉打卡通知
+        if (packageName == Constant.DING_DING && notice.contains("成功")) {
+            backToMainActivity()
+            "即将发送通知邮件，请注意查收".show(this)
+            notice.sendEmail(this, null, false)
         }
 
-        if (packageName == targetPackageName) {
-            if (notice.contains("成功")) {
-                backToMainActivity()
-                "即将发送通知邮件，请注意查收".show(this)
-                notice.sendEmail(this, null, false)
-            }
-        } else if (packageName == Constant.WECHAT || packageName == Constant.QQ || packageName == Constant.TIM || packageName == Constant.ZFB) {
+        // 其他消息指令
+        if (packageName == Constant.WECHAT || packageName == Constant.QQ || packageName == Constant.TIM || packageName == Constant.ZFB) {
             if (notice.contains("电量")) {
                 val capacity = batteryManager.getIntProperty(
                     BatteryManager.BATTERY_PROPERTY_CAPACITY

@@ -12,8 +12,6 @@ object Constant {
     const val EMAIL_SEND_PORT_KEY = "EMAIL_SEND_PORT_KEY"
     const val EMAIL_IN_BOX_KEY = "EMAIL_IN_BOX_KEY"
     const val EMAIL_TITLE_KEY = "EMAIL_TITLE_KEY"
-    const val TARGET_APP_NAME_KEY = "TARGET_APP_NAME_KEY"
-    const val TARGET_APP_PACKAGE_KEY = "TARGET_APP_PACKAGE_KEY"
     const val STAY_DD_TIMEOUT_KEY = "STAY_DD_TIMEOUT_KEY"
     const val BACK_TO_HOME_KEY = "BACK_TO_HOME_KEY"
     const val TASK_NAME_KEY = "TASK_KEY"
