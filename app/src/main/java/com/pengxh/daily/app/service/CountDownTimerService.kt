@@ -12,7 +12,6 @@ import androidx.core.app.NotificationCompat
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.extensions.formatTime
 import com.pengxh.daily.app.extensions.openApplication
-import com.pengxh.daily.app.utils.Constant
 
 /**
  * APP倒计时服务，解决手机灭屏后倒计时会出现延迟的问题
@@ -82,7 +81,7 @@ class CountDownTimerService : Service() {
 
             override fun onFinish() {
                 isTimerRunning = false
-                openApplication(Constant.DING_DING, true)
+                openApplication(true)
             }
         }.apply {
             start()

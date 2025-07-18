@@ -65,7 +65,15 @@ class NotificationMonitorService : NotificationListenerService() {
             }
         }
 
-        if (packageName == Constant.DING_DING) {
+        val targetPackageName = SaveKeyValues.getValue(
+            Constant.TARGET_APP_PACKAGE_KEY, ""
+        ) as String
+        if (targetPackageName == "") {
+            "未指定目标软件，通知监听将无法正常工作".show(this)
+            return
+        }
+
+        if (packageName == targetPackageName) {
             if (notice.contains("成功")) {
                 backToMainActivity()
                 "即将发送通知邮件，请注意查收".show(this)
@@ -82,9 +90,9 @@ class NotificationMonitorService : NotificationListenerService() {
             } else if (notice.contains("停止")) {
                 EventBus.getDefault().post(MessageEvent(Constant.STOP_DAILY_TASK_CODE))
             } else {
-                val key = SaveKeyValues.getValue(Constant.DING_DING_KEY, "打卡") as String
+                val key = SaveKeyValues.getValue(Constant.TASK_NAME_KEY, "打卡") as String
                 if (notice.contains(key)) {
-                    openApplication(Constant.DING_DING, true)
+                    openApplication(true)
                 }
             }
         }

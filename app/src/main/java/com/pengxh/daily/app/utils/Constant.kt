@@ -12,10 +12,11 @@ object Constant {
     const val EMAIL_SEND_PORT_KEY = "EMAIL_SEND_PORT_KEY"
     const val EMAIL_IN_BOX_KEY = "EMAIL_IN_BOX_KEY"
     const val EMAIL_TITLE_KEY = "EMAIL_TITLE_KEY"
-
+    const val TARGET_APP_NAME_KEY = "TARGET_APP_NAME_KEY"
+    const val TARGET_APP_PACKAGE_KEY = "TARGET_APP_PACKAGE_KEY"
     const val STAY_DD_TIMEOUT_KEY = "STAY_DD_TIMEOUT_KEY"
     const val BACK_TO_HOME_KEY = "BACK_TO_HOME_KEY"
-    const val DING_DING_KEY = "DING_DING_KEY"
+    const val TASK_NAME_KEY = "TASK_KEY"
     const val RANDOM_TIME_KEY = "RANDOM_TIME_KEY"
 
     const val TICK_TIME_CODE = 2024071701
@@ -40,11 +41,12 @@ object Constant {
     const val START_DAILY_TASK_CODE = 2025030701
     const val STOP_DAILY_TASK_CODE = 2025030702
 
-    const val DING_DING = "com.alibaba.android.rimet"
-    const val WECHAT = "com.tencent.mm"
-    const val QQ = "com.tencent.mobileqq"
-    const val TIM = "com.tencent.tim"
-    const val ZFB = "com.eg.android.AlipayGphone"
+    const val DING_DING = "com.alibaba.android.rimet" // 钉钉
+    const val WECHAT = "com.tencent.mm" // 微信
+    const val WEWORK = "com.tencent.wework" // 企业微信
+    const val QQ = "com.tencent.mobileqq" // QQ
+    const val TIM = "com.tencent.tim" // TIM
+    const val ZFB = "com.eg.android.AlipayGphone" // 支付宝
 
     const val FOREGROUND_RUNNING_SERVICE_TITLE = "为保证程序正常运行，请勿移除此通知"
     const val DEFAULT_OVER_TIME = "30s"

@@ -1,5 +1,6 @@
 package com.pengxh.daily.app.fragment
 
+import android.app.Activity.RESULT_OK
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.pengxh.daily.app.BuildConfig
 import com.pengxh.daily.app.R
@@ -24,6 +26,7 @@ import com.pengxh.daily.app.service.NotificationMonitorService
 import com.pengxh.daily.app.ui.EmailConfigActivity
 import com.pengxh.daily.app.ui.NoticeRecordActivity
 import com.pengxh.daily.app.ui.QuestionAndAnswerActivity
+import com.pengxh.daily.app.ui.SelectTargetAppActivity
 import com.pengxh.daily.app.ui.TaskConfigActivity
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.EmailConfigKit
@@ -31,6 +34,7 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.navigatePageTo
 import com.pengxh.kt.lite.extensions.setScreenBrightness
+import com.pengxh.kt.lite.utils.LiteKitConstant
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import kotlinx.coroutines.Dispatchers
@@ -63,9 +67,27 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
         if (requireContext().notificationEnable()) {
             turnOnNotificationMonitorService()
         }
+        binding.targetAppView.text =
+            SaveKeyValues.getValue(Constant.TARGET_APP_NAME_KEY, "") as String
+    }
+
+    private val selectSingleStudentLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK) {
+            it.data?.apply {
+                val appName = getStringExtra(LiteKitConstant.INTENT_PARAM_KEY)!!
+                binding.targetAppView.text = appName
+            }
+        }
     }
 
     override fun initEvent() {
+        binding.targetAppLayout.setOnClickListener {
+            val intent = Intent(requireContext(), SelectTargetAppActivity::class.java)
+            selectSingleStudentLauncher.launch(intent)
+        }
+
         binding.emailConfigLayout.setOnClickListener {
             requireContext().navigatePageTo<EmailConfigActivity>()
         }
@@ -84,7 +106,7 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
         }
 
         binding.openTestLayout.setOnClickListener {
-            requireContext().openApplication(Constant.DING_DING, false)
+            requireContext().openApplication(false)
         }
 
         binding.turnoffLightSwitch.setOnCheckedChangeListener { _, isChecked ->

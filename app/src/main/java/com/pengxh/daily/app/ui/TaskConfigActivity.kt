@@ -51,7 +51,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
                 .setOnDialogButtonClickListener(object :
                     AlertInputDialog.OnDialogButtonClickListener {
                     override fun onConfirmClick(value: String) {
-                        SaveKeyValues.putValue(Constant.DING_DING_KEY, value)
+                        SaveKeyValues.putValue(Constant.TASK_NAME_KEY, value)
                         binding.keyTextView.text = value
                     }
 
@@ -130,7 +130,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
         binding.timeoutTextView.text = SaveKeyValues.getValue(
             Constant.STAY_DD_TIMEOUT_KEY, Constant.DEFAULT_OVER_TIME
         ) as String
-        binding.keyTextView.text = SaveKeyValues.getValue(Constant.DING_DING_KEY, "打卡") as String
+        binding.keyTextView.text = SaveKeyValues.getValue(Constant.TASK_NAME_KEY, "打卡") as String
         val needRandom = SaveKeyValues.getValue(Constant.RANDOM_TIME_KEY, true) as Boolean
         binding.randomTimeSwitch.isChecked = needRandom
     }
