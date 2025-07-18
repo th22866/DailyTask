@@ -281,7 +281,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                             taskBeans.add(it)
                         }
                         taskBeans.sortBy { x -> x.time }
-                        dailyTaskAdapter.notifyDataSetChanged()
+                        dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
                         binding.emptyView.visibility = View.GONE
                         "任务导入成功".show(requireContext())
                     } catch (e: JsonSyntaxException) {
