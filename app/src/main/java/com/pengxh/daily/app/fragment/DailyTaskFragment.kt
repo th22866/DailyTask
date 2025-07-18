@@ -166,13 +166,13 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     .setPositiveButton("确定").setOnDialogButtonClickListener(object :
                         AlertControlDialog.OnDialogButtonClickListener {
                         override fun onConfirmClick() {
-                            dailyTaskDao.delete(item)
-                            if (taskBeans.remove(item)) {
-                                dailyTaskAdapter.notifyDataSetChanged()
-                                updateEmptyViewVisibility()
-                            } else {
-                                "任务已不在列表中".show(requireContext())
-                            }
+                            dailyTaskDao.deleteTaskById(item.id)
+                            taskBeans.removeAt(position)
+                            dailyTaskAdapter.notifyItemRemoved(position)
+                            dailyTaskAdapter.notifyItemRangeChanged(
+                                position, taskBeans.size - position
+                            )
+                            updateEmptyViewVisibility()
                         }
 
                         override fun onCancelClick() {
