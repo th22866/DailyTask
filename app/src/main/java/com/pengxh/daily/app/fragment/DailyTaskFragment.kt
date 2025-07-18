@@ -145,7 +145,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                                     item.time = time
                                     dailyTaskDao.update(item)
                                     taskBeans.sortBy { x -> x.time }
-                                    dailyTaskAdapter.notifyDataSetChanged()
+                                    dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
                                 }
                             })
                         }
