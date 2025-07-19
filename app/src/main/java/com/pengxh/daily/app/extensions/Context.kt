@@ -8,13 +8,12 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.core.app.NotificationManagerCompat
+import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.ui.MainActivity
 import com.pengxh.daily.app.utils.Constant
-import com.pengxh.daily.app.utils.MessageEvent
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
-import org.greenrobot.eventbus.EventBus
 
 /**
  * 检测通知监听服务是否被授权
@@ -74,12 +73,12 @@ fun Context.openApplication(needEmail: Boolean) {
     this.startActivity(intent)
     /**跳转钉钉结束*****************************************/
     if (needEmail) {
-        EventBus.getDefault().post(MessageEvent(Constant.START_COUNT_DOWN_TIMER_CODE))
+        DailyTaskApplication.get().eventViewModel.sendEvent(Constant.START_COUNT_DOWN_TIMER_CODE)
     }
 }
 
 fun Context.backToMainActivity() {
-    EventBus.getDefault().post(MessageEvent(Constant.CANCEL_COUNT_DOWN_TIMER_CODE))
+    DailyTaskApplication.get().eventViewModel.sendEvent(Constant.CANCEL_COUNT_DOWN_TIMER_CODE)
     val backToHome = SaveKeyValues.getValue(Constant.BACK_TO_HOME_KEY, false) as Boolean
     if (backToHome) {
         //模拟点击Home键
