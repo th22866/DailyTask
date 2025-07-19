@@ -36,6 +36,7 @@ import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.OnTimeSelectedCallback
 import com.pengxh.daily.app.utils.TimeKit
+import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.divider.RecyclerViewItemOffsets
 import com.pengxh.kt.lite.extensions.convertColor
@@ -47,7 +48,10 @@ import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 import com.pengxh.kt.lite.widget.dialog.AlertInputDialog
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 
 
@@ -66,6 +70,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private var isTaskStarted = false
     private var timeoutTimer: CountDownTimer? = null
     private var countDownTimerService: CountDownTimerService? = null
+    private var isRefresh = false
 
     override fun setupTopBarLayout() {
 
@@ -169,6 +174,16 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         binding.emptyView.visibility = if (taskBeans.isEmpty()) View.VISIBLE else View.GONE
     }
 
+    private val itemComparator = object : NormalRecyclerAdapter.ItemComparator<DailyTaskBean> {
+        override fun areItemsTheSame(oldItem: DailyTaskBean, newItem: DailyTaskBean): Boolean {
+            return oldItem.id == newItem.id && oldItem.time == newItem.time
+        }
+
+        override fun areContentsTheSame(oldItem: DailyTaskBean, newItem: DailyTaskBean): Boolean {
+            return oldItem.time == newItem.time
+        }
+    }
+
     override fun initEvent() {
         binding.executeTaskButton.setOnClickListener {
             if (!isTaskStarted) {
@@ -177,6 +192,21 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 stopExecuteTask(false)
             }
         }
+
+        binding.refreshView.setOnRefreshListener {
+            isRefresh = true
+            lifecycleScope.launch(Dispatchers.Main) {
+                val result = withContext(Dispatchers.IO) {
+                    dailyTaskDao.loadAll()
+                }
+                delay(500)
+                binding.refreshView.finishRefresh()
+                isRefresh = false
+                dailyTaskAdapter.refresh(result, itemComparator)
+            }
+        }
+
+        binding.refreshView.setEnableLoadMore(false)
 
         dailyTaskAdapter.setOnItemClickListener(object :
             DailyTaskAdapter.OnItemClickListener<DailyTaskBean> {
