@@ -83,7 +83,7 @@ fun Context.backToMainActivity() {
     if (backToHome) {
         //模拟点击Home键
         val home = Intent(Intent.ACTION_MAIN).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             addCategory(Intent.CATEGORY_HOME)
         }
         startActivity(home)
