@@ -51,7 +51,6 @@ import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 import com.pengxh.kt.lite.widget.dialog.AlertInputDialog
-import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
 import com.yanzhenjie.recyclerview.OnItemClickListener
 import com.yanzhenjie.recyclerview.OnItemLongClickListener
@@ -62,11 +61,9 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicInteger
 
-
 class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handler.Callback {
 
     private val kTag = "DailyTaskFragment"
-    private val dailyTaskDao by lazy { DailyTaskApplication.get().dataBase.dailyTaskDao() }
     private val marginOffset by lazy { 16.dp2px(requireContext()) }
     private val gson by lazy { Gson() }
     private val weakReferenceHandler = WeakReferenceHandler(this)
@@ -161,10 +158,14 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        taskBeans = DatabaseWrapper.loadAll()
-
-        updateEmptyViewVisibility()
-
+        taskBeans = DatabaseWrapper.loadAllTask()
+        if (taskBeans.isEmpty()) {
+            binding.refreshView.visibility = View.GONE
+            binding.emptyView.visibility = View.VISIBLE
+        } else {
+            binding.refreshView.visibility = View.VISIBLE
+            binding.emptyView.visibility = View.GONE
+        }
         dailyTaskAdapter = DailyTaskAdapter(requireContext(), taskBeans)
         binding.recyclerView.setOnItemClickListener(itemClickListener)
         binding.recyclerView.setOnItemLongClickListener(itemLongClickListener)
@@ -205,9 +206,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     timePicker.selectedSecond
                 )
                 item.time = time
-                dailyTaskDao.update(item)
-                taskBeans.sortBy { x -> x.time }
-                dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
+                DatabaseWrapper.updateTask(item)
+                taskBeans = DatabaseWrapper.loadAllTask()
+                dailyTaskAdapter.refresh(taskBeans)
                 dialog.dismiss()
             }
             dialog.show()
@@ -232,15 +233,23 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 .setOnDialogButtonClickListener(object :
                     AlertControlDialog.OnDialogButtonClickListener {
                     override fun onConfirmClick() {
-                        val item = taskBeans[adapterPosition]
-                        dailyTaskDao.delete(item)
-                        taskBeans.removeAt(adapterPosition)
-                        dailyTaskAdapter.notifyItemRemoved(adapterPosition)
-                        dailyTaskAdapter.notifyItemRangeChanged(
-                            adapterPosition, taskBeans.size - adapterPosition
-                        )
-                        updateEmptyViewVisibility()
-                        binding.floatingActionButton.show(true)
+                        try {
+                            val item = taskBeans[adapterPosition]
+                            DatabaseWrapper.deleteTask(item)
+                            taskBeans.removeAt(adapterPosition)
+                            dailyTaskAdapter.refresh(taskBeans)
+                            if (taskBeans.isEmpty()) {
+                                binding.refreshView.visibility = View.GONE
+                                binding.emptyView.visibility = View.VISIBLE
+                            } else {
+                                binding.refreshView.visibility = View.VISIBLE
+                                binding.emptyView.visibility = View.GONE
+                            }
+                            binding.floatingActionButton.show(true)
+                        } catch (e: IndexOutOfBoundsException) {
+                            e.printStackTrace()
+                            "删除失败，请刷新重试".show(requireContext())
+                        }
                     }
 
                     override fun onCancelClick() {
@@ -248,10 +257,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     }
                 }).build().show()
         }
-    }
-
-    private fun updateEmptyViewVisibility() {
-        binding.emptyView.visibility = if (taskBeans.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private val itemComparator = object : NormalRecyclerAdapter.ItemComparator<DailyTaskBean> {
@@ -277,7 +282,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             isRefresh = true
             lifecycleScope.launch(Dispatchers.Main) {
                 val result = withContext(Dispatchers.IO) {
-                    DatabaseWrapper.loadAll()
+                    DatabaseWrapper.loadAllTask()
                 }
                 delay(500)
                 binding.refreshView.finishRefresh()
@@ -314,7 +319,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     }
 
     private fun startExecuteTask(isRemote: Boolean) {
-        if (DatabaseWrapper.loadAll().isEmpty()) {
+        if (DatabaseWrapper.loadAllTask().isEmpty()) {
             "循环任务启动失败，请先添加任务时间点".sendEmail(
                 requireContext(), "启动循环任务通知", false
             )
@@ -357,13 +362,13 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     return
                 }
 
+                binding.refreshView.visibility = View.VISIBLE
+                binding.emptyView.visibility = View.GONE
                 val bean = DailyTaskBean()
                 bean.time = time
-                dailyTaskDao.insert(bean)
-                taskBeans.add(bean)
-                taskBeans.sortBy { x -> x.time }
-                dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
-                binding.emptyView.visibility = View.GONE
+                DatabaseWrapper.insert(bean)
+                taskBeans = DatabaseWrapper.loadAllTask()
+                dailyTaskAdapter.refresh(taskBeans)
             }
         })
     }
@@ -382,24 +387,16 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     try {
                         val tasks = gson.fromJson<List<DailyTaskBean>>(value, type)
                         tasks.forEach {
-                            dailyTaskDao.insert(it)
-                            taskBeans.add(it)
+                            DatabaseWrapper.insert(it)
                         }
-                        taskBeans.sortBy { x -> x.time }
-                        dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
+                        binding.refreshView.visibility = View.VISIBLE
                         binding.emptyView.visibility = View.GONE
+                        taskBeans = DatabaseWrapper.loadAllTask()
+                        dailyTaskAdapter.refresh(taskBeans)
                         "任务导入成功".show(requireContext())
                     } catch (e: JsonSyntaxException) {
                         e.printStackTrace()
-                        AlertMessageDialog.Builder().setContext(requireContext())
-                            .setTitle("温馨提醒")
-                            .setMessage("导入失败，请确认导入的是正确的任务数据")
-                            .setPositiveButton("好的").setOnDialogButtonClickListener(object :
-                                AlertMessageDialog.OnDialogButtonClickListener {
-                                override fun onConfirmClick() {
-
-                                }
-                            }).build().show()
+                        "导入失败，请确认导入的是正确的任务数据".show(requireContext())
                     }
                 }
 

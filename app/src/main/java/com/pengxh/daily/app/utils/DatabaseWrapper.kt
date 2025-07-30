@@ -7,12 +7,20 @@ import com.pengxh.daily.app.bean.NotificationBean
 object DatabaseWrapper {
     private val dailyTaskDao by lazy { DailyTaskApplication.get().dataBase.dailyTaskDao() }
 
-    fun loadAll(): ArrayList<DailyTaskBean> {
+    fun loadAllTask(): ArrayList<DailyTaskBean> {
         return dailyTaskDao.loadAll() as ArrayList<DailyTaskBean>
     }
 
     fun queryTaskByTime(time: String): Int {
         return dailyTaskDao.queryTaskByTime(time)
+    }
+
+    fun updateTask(bean: DailyTaskBean) {
+        dailyTaskDao.update(bean)
+    }
+
+    fun deleteTask(bean: DailyTaskBean) {
+        dailyTaskDao.delete(bean)
     }
 
     fun insert(bean: DailyTaskBean) {
