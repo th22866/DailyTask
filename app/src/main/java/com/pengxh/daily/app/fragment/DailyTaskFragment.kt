@@ -17,6 +17,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.github.gzuliyujiang.wheelpicker.widget.TimeWheelLayout
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -26,6 +29,7 @@ import com.pengxh.daily.app.adapter.DailyTaskAdapter
 import com.pengxh.daily.app.bean.DailyTaskBean
 import com.pengxh.daily.app.databinding.FragmentDailyTaskBinding
 import com.pengxh.daily.app.extensions.backToMainActivity
+import com.pengxh.daily.app.extensions.convertToTimeEntity
 import com.pengxh.daily.app.extensions.diffCurrent
 import com.pengxh.daily.app.extensions.formatTime
 import com.pengxh.daily.app.extensions.getTaskIndex
@@ -55,6 +59,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicInteger
 
 
@@ -185,30 +190,27 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 "任务进行中，无法修改，请先取消当前任务".show(requireContext())
                 return
             }
-            AlertControlDialog.Builder()
-                .setContext(requireContext())
-                .setTitle("修改打卡任务")
-                .setMessage("是否需要调整打卡时间？")
-                .setNegativeButton("取消")
-                .setPositiveButton("确定")
-                .setOnDialogButtonClickListener(object :
-                    AlertControlDialog.OnDialogButtonClickListener {
-                    override fun onConfirmClick() {
-                        val item = taskBeans[adapterPosition]
-                        requireActivity().showTimePicker(item, object : OnTimeSelectedCallback {
-                            override fun onTimePicked(time: String) {
-                                item.time = time
-                                dailyTaskDao.update(item)
-                                taskBeans.sortBy { x -> x.time }
-                                dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
-                            }
-                        })
-                    }
-
-                    override fun onCancelClick() {
-
-                    }
-                }).build().show()
+            val item = taskBeans[adapterPosition]
+            val view = layoutInflater.inflate(R.layout.bottom_sheet_layout_update, null)
+            val dialog = BottomSheetDialog(requireContext())
+            dialog.setContentView(view)
+            val timePicker = view.findViewById<TimeWheelLayout>(R.id.timePicker)
+            timePicker.setDefaultValue(item.convertToTimeEntity())
+            view.findViewById<MaterialButton>(R.id.saveButton).setOnClickListener {
+                val time = String.format(
+                    Locale.getDefault(),
+                    "%02d:%02d:%02d",
+                    timePicker.selectedHour,
+                    timePicker.selectedMinute,
+                    timePicker.selectedSecond
+                )
+                item.time = time
+                dailyTaskDao.update(item)
+                taskBeans.sortBy { x -> x.time }
+                dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
+                dialog.dismiss()
+            }
+            dialog.show()
         }
     }
 
