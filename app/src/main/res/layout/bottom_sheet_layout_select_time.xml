@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,18 +19,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:strokeWidth="0dp" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/titleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:paddingVertical="@dimen/dp_16"
-        android:text="修改任务时间"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/sp_18"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/handleView" />
+        app:layout_constraintTop_toBottomOf="@id/handleView"
+        tools:text="修改任务时间" />
 
     <LinearLayout
         android:layout_width="match_parent"

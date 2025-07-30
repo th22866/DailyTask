@@ -20,6 +20,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.github.gzuliyujiang.wheelpicker.widget.TimeWheelLayout
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -34,12 +35,10 @@ import com.pengxh.daily.app.extensions.diffCurrent
 import com.pengxh.daily.app.extensions.formatTime
 import com.pengxh.daily.app.extensions.getTaskIndex
 import com.pengxh.daily.app.extensions.sendEmail
-import com.pengxh.daily.app.extensions.showTimePicker
 import com.pengxh.daily.app.service.CountDownTimerService
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
 import com.pengxh.daily.app.utils.DatabaseWrapper
-import com.pengxh.daily.app.utils.OnTimeSelectedCallback
 import com.pengxh.daily.app.utils.TimeKit
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -192,9 +191,11 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 return
             }
             val item = taskBeans[adapterPosition]
-            val view = layoutInflater.inflate(R.layout.bottom_sheet_layout_update, null)
+            val view = layoutInflater.inflate(R.layout.bottom_sheet_layout_select_time, null)
             val dialog = BottomSheetDialog(requireContext())
             dialog.setContentView(view)
+            val titleView = view.findViewById<MaterialTextView>(R.id.titleView)
+            titleView.text = "修改任务时间"
             val timePicker = view.findViewById<TimeWheelLayout>(R.id.timePicker)
             timePicker.setDefaultValue(item.convertToTimeEntity())
             view.findViewById<MaterialButton>(R.id.saveButton).setOnClickListener {
@@ -355,22 +356,31 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     }
 
     private fun addTask() {
-        requireActivity().showTimePicker(object : OnTimeSelectedCallback {
-            override fun onTimePicked(time: String) {
-                if (DatabaseWrapper.queryTaskByTime(time) > 0) {
-                    "任务时间点已存在".show(requireContext())
-                    return
-                }
-
-                binding.refreshView.visibility = View.VISIBLE
-                binding.emptyView.visibility = View.GONE
-                val bean = DailyTaskBean()
-                bean.time = time
-                DatabaseWrapper.insert(bean)
-                taskBeans = DatabaseWrapper.loadAllTask()
-                dailyTaskAdapter.refresh(taskBeans)
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_layout_select_time, null)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(view)
+        val titleView = view.findViewById<MaterialTextView>(R.id.titleView)
+        titleView.text = "添加任务"
+        val timePicker = view.findViewById<TimeWheelLayout>(R.id.timePicker)
+        view.findViewById<MaterialButton>(R.id.saveButton).setOnClickListener {
+            val time = String.format(
+                Locale.getDefault(),
+                "%02d:%02d:%02d",
+                timePicker.selectedHour,
+                timePicker.selectedMinute,
+                timePicker.selectedSecond
+            )
+            binding.refreshView.visibility = View.VISIBLE
+            binding.emptyView.visibility = View.GONE
+            val bean = DailyTaskBean().apply {
+                this.time = time
             }
-        })
+            DatabaseWrapper.insert(bean)
+            taskBeans = DatabaseWrapper.loadAllTask()
+            dailyTaskAdapter.refresh(taskBeans)
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private fun importTask() {
