@@ -23,9 +23,9 @@
         android:id="@+id/resetTimeLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemLayoutHeight"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_16"
         android:background="@color/white"
-        android:paddingHorizontal="10dp">
+        android:paddingHorizontal="@dimen/dp_16">
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="#CCC" />
 
     <RelativeLayout
@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemLayoutHeight"
         android:background="@color/white"
-        android:paddingHorizontal="10dp">
+        android:paddingHorizontal="@dimen/dp_16">
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="#CCC" />
 
     <RelativeLayout
@@ -89,7 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemLayoutHeight"
         android:background="@color/white"
-        android:paddingHorizontal="10dp">
+        android:paddingHorizontal="@dimen/dp_16">
 
         <TextView
             android:layout_width="wrap_content"
@@ -113,14 +113,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="#CCC" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemLayoutHeight"
         android:background="@color/white"
-        android:paddingHorizontal="10dp">
+        android:paddingHorizontal="@dimen/dp_16">
 
         <TextView
             android:layout_width="wrap_content"
@@ -144,7 +144,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="#CCC" />
 
     <RelativeLayout
@@ -152,7 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemLayoutHeight"
         android:background="@color/white"
-        android:paddingHorizontal="10dp">
+        android:paddingHorizontal="@dimen/dp_16">
 
         <TextView
             android:layout_width="wrap_content"

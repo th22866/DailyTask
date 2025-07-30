@@ -6,7 +6,6 @@ import androidx.room.Room.databaseBuilder
 import com.pengxh.daily.app.utils.DailyTaskDataBase
 import com.pengxh.daily.app.vm.EventViewModel
 import com.pengxh.kt.lite.utils.SaveKeyValues
-import com.tencent.bugly.crashreport.CrashReport
 import kotlin.properties.Delegates
 
 
@@ -33,7 +32,6 @@ class DailyTaskApplication : Application() {
         super.onCreate()
         application = this
         SaveKeyValues.initSharedPreferences(this)
-        CrashReport.initCrashReport(this, "ce38195468", false)
         dataBase = databaseBuilder(this, DailyTaskDataBase::class.java, "DailyTask.db")
             .allowMainThreadQueries()
             .build()

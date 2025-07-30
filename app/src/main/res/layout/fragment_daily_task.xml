@@ -17,9 +17,9 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_10"
+            android:layout_margin="@dimen/dp_16"
             android:backgroundTint="@color/white"
-            app:cardCornerRadius="@dimen/dp_10">
+            app:cardCornerRadius="@dimen/dp_16">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,7 +32,7 @@
                     android:fontFamily="@font/ds_digital"
                     android:format24Hour="HH:mm:ss"
                     android:gravity="center"
-                    android:paddingVertical="@dimen/dp_30"
+                    android:paddingVertical="@dimen/dp_32"
                     android:textColor="@color/black"
                     android:textSize="56sp" />
 
@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="@dimen/dp_10">
+                    android:padding="@dimen/dp_16">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -64,12 +64,12 @@
                         <TextView
                             android:id="@+id/repeatTimeView"
                             android:layout_width="wrap_content"
-                            android:layout_height="24dp"
-                            android:layout_marginTop="3dp"
-                            android:background="@drawable/bg_solid_layout_black_radius_5"
-                            android:drawablePadding="@dimen/dp_5"
+                            android:layout_height="@dimen/dp_24"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_solid_layout_black_radius_8"
+                            android:drawablePadding="@dimen/dp_8"
                             android:gravity="center"
-                            android:paddingHorizontal="@dimen/dp_5"
+                            android:paddingHorizontal="@dimen/dp_8"
                             android:singleLine="true"
                             android:text="--秒后刷新每日任务"
                             android:textColor="@color/white"
@@ -82,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/dp_10"
+                        android:layout_marginStart="@dimen/dp_16"
                         android:src="@mipmap/ic_start" />
                 </LinearLayout>
             </LinearLayout>
@@ -128,7 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_margin="@dimen/dp_10"
+        android:layout_margin="@dimen/dp_16"
         android:backgroundTint="@color/theme_color"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_add"

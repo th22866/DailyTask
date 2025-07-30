@@ -3,15 +3,15 @@
 
     <item android:state_selected="false">
         <shape>
-            <corners android:radius="@dimen/dp_10" />
+            <corners android:radius="@dimen/dp_16" />
             <solid android:color="@color/white" />
         </shape>
     </item>
 
     <item android:state_selected="true">
         <shape>
-            <stroke android:width="@dimen/dp_3" android:color="@color/theme_color" />
-            <corners android:radius="@dimen/dp_10" />
+            <stroke android:width="@dimen/dp_4" android:color="@color/theme_color" />
+            <corners android:radius="@dimen/dp_16" />
             <solid android:color="@color/white" />
         </shape>
     </item>

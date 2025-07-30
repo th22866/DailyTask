@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -29,21 +29,21 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/emailTagView"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:backgroundTint="@color/red"
-                app:cardCornerRadius="@dimen/dp_10" />
+                app:cardCornerRadius="@dimen/dp_16" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/taskConfigLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
-            android:layout_marginVertical="@dimen/dp_10"
+            android:layout_marginVertical="@dimen/dp_16"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -90,14 +90,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_16"
             android:background="#CCC" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,7 +127,7 @@
                     android:id="@+id/tipsView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_3"
+                    android:layout_marginTop="@dimen/dp_4"
                     android:text="通知监听服务未开启，无法监听打卡通知"
                     android:textColor="@color/red"
                     android:textSize="@dimen/sp_10" />
@@ -137,14 +137,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_16"
             android:background="#CCC" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -168,14 +168,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_16"
             android:background="#CCC" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:id="@+id/view"
@@ -191,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginStart="@dimen/dp_16"
                 android:layout_toEndOf="@id/view"
                 android:orientation="vertical">
 
@@ -208,7 +208,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginTop="@dimen/dp_3"
+                    android:layout_marginTop="@dimen/dp_4"
                     android:singleLine="true"
                     android:text="开启后，打卡倒计时结束，会先退回桌面再启动本软件"
                     android:textSize="@dimen/sp_10" />
@@ -217,14 +217,14 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_10" />
+            android:layout_height="@dimen/dp_16" />
 
         <RelativeLayout
             android:id="@+id/openTestLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -245,7 +245,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_16"
             android:background="#CCC" />
 
         <RelativeLayout
@@ -253,7 +253,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -274,7 +274,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_16"
             android:background="#CCC" />
 
         <RelativeLayout
@@ -282,7 +282,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -303,14 +303,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginHorizontal="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_16"
             android:background="#CCC" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/itemLayoutHeight"
             android:background="@color/white"
-            android:paddingHorizontal="10dp">
+            android:paddingHorizontal="@dimen/dp_16">
 
             <TextView
                 android:layout_width="wrap_content"

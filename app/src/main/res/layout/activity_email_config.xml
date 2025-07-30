@@ -22,7 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemLayoutHeight"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_16"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -46,7 +46,7 @@
             android:gravity="center_vertical|end"
             android:hint="如：xxxxx@qq.com"
             android:inputType="textEmailAddress"
-            android:paddingVertical="@dimen/dp_7"
+            android:paddingVertical="@dimen/dp_8"
             android:singleLine="true"
             android:textColorHint="@color/lib_hint_color"
             android:textSize="@dimen/sp_16" />
@@ -55,7 +55,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="#CCC" />
 
     <LinearLayout
@@ -82,7 +82,7 @@
             android:background="@null"
             android:gravity="center_vertical|end"
             android:hint="如：wkepaekhmlalbgji"
-            android:paddingVertical="@dimen/dp_7"
+            android:paddingVertical="@dimen/dp_8"
             android:singleLine="true"
             android:textColorHint="@color/lib_hint_color"
             android:textSize="@dimen/sp_16" />
@@ -91,7 +91,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="#CCC" />
 
     <LinearLayout
@@ -118,7 +118,7 @@
             android:background="@null"
             android:gravity="center_vertical|end"
             android:hint="如：smtp.qq.com"
-            android:paddingVertical="@dimen/dp_7"
+            android:paddingVertical="@dimen/dp_8"
             android:singleLine="true"
             android:textColorHint="@color/lib_hint_color"
             android:textSize="@dimen/sp_16" />
@@ -127,7 +127,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="#CCC" />
 
     <LinearLayout
@@ -156,7 +156,7 @@
             android:hint="如：587"
             android:inputType="number"
             android:maxLength="5"
-            android:paddingVertical="@dimen/dp_7"
+            android:paddingVertical="@dimen/dp_8"
             android:singleLine="true"
             android:textColorHint="@color/lib_hint_color"
             android:textSize="@dimen/sp_16" />
@@ -166,7 +166,7 @@
         android:id="@+id/emailLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemLayoutHeight"
-        android:layout_marginVertical="@dimen/dp_10"
+        android:layout_marginVertical="@dimen/dp_16"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:paddingHorizontal="10dp">
@@ -188,7 +188,7 @@
             android:background="@null"
             android:gravity="center_vertical|end"
             android:hint="如：xxxxx@qq.com"
-            android:paddingVertical="@dimen/dp_7"
+            android:paddingVertical="@dimen/dp_8"
             android:singleLine="true"
             android:textColorHint="@color/lib_hint_color"
             android:textSize="@dimen/sp_16" />
@@ -219,7 +219,7 @@
             android:background="@null"
             android:gravity="center_vertical|end"
             android:hint="如：打卡结果通知"
-            android:paddingVertical="@dimen/dp_7"
+            android:paddingVertical="@dimen/dp_8"
             android:singleLine="true"
             android:textColorHint="@color/lib_hint_color"
             android:textSize="@dimen/sp_16" />
@@ -228,7 +228,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="#CCC" />
 
     <LinearLayout
