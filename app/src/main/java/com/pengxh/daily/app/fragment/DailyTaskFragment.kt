@@ -34,6 +34,7 @@ import com.pengxh.daily.app.extensions.showTimePicker
 import com.pengxh.daily.app.service.CountDownTimerService
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
+import com.pengxh.daily.app.utils.DatabaseWrapper
 import com.pengxh.daily.app.utils.OnTimeSelectedCallback
 import com.pengxh.daily.app.utils.TimeKit
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
@@ -153,7 +154,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        taskBeans = dailyTaskDao.loadAll()
+        taskBeans = DatabaseWrapper.loadAll()
 
         updateEmptyViewVisibility()
 
@@ -197,7 +198,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             isRefresh = true
             lifecycleScope.launch(Dispatchers.Main) {
                 val result = withContext(Dispatchers.IO) {
-                    dailyTaskDao.loadAll()
+                    DatabaseWrapper.loadAll()
                 }
                 delay(500)
                 binding.refreshView.finishRefresh()
@@ -288,7 +289,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     }
 
     private fun startExecuteTask(isRemote: Boolean) {
-        if (dailyTaskDao.loadAll().isEmpty()) {
+        if (DatabaseWrapper.loadAll().isEmpty()) {
             "循环任务启动失败，请先添加任务时间点".sendEmail(
                 requireContext(), "启动循环任务通知", false
             )
@@ -326,7 +327,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private fun addTask() {
         requireActivity().showTimePicker(object : OnTimeSelectedCallback {
             override fun onTimePicked(time: String) {
-                if (dailyTaskDao.queryTaskByTime(time) > 0) {
+                if (DatabaseWrapper.queryTaskByTime(time) > 0) {
                     "任务时间点已存在".show(requireContext())
                     return
                 }

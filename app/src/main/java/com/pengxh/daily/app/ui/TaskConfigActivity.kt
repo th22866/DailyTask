@@ -3,16 +3,15 @@ package com.pengxh.daily.app.ui
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.os.Bundle
-import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.databinding.ActivityTaskConfigBinding
 import com.pengxh.daily.app.extensions.initImmersionBar
 import com.pengxh.daily.app.service.FloatingWindowService
 import com.pengxh.daily.app.utils.Constant
+import com.pengxh.daily.app.utils.DatabaseWrapper
 import com.pengxh.daily.app.widgets.TaskMessageDialog
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.extensions.convertColor
-import com.pengxh.kt.lite.extensions.getSystemService
 import com.pengxh.kt.lite.extensions.isNumber
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.utils.SaveKeyValues
@@ -26,8 +25,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
     private val context = this
     private val hourArray = arrayListOf("0", "1", "2", "3", "4", "5", "6", "自定义（单位：时）")
     private val timeArray = arrayListOf("15s", "30s", "45s", "自定义（单位：秒）")
-    private val dailyTaskDao by lazy { DailyTaskApplication.get().dataBase.dailyTaskDao() }
-    private val clipboard by lazy { getSystemService<ClipboardManager>() }
+    private val clipboard by lazy { getSystemService(CLIPBOARD_SERVICE) as ClipboardManager }
 
     override fun initEvent() {
         binding.resetTimeLayout.setOnClickListener {
@@ -77,7 +75,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
         }
 
         binding.outputLayout.setOnClickListener {
-            val taskBeans = dailyTaskDao.loadAll()
+            val taskBeans = DatabaseWrapper.loadAll()
 
             if (taskBeans.isEmpty()) {
                 "没有任务可以导出".show(this)
@@ -91,7 +89,7 @@ class TaskConfigActivity : KotlinBaseActivity<ActivityTaskConfigBinding>() {
                     TaskMessageDialog.OnDialogButtonClickListener {
                     override fun onConfirmClick(taskValue: String) {
                         val cipData = ClipData.newPlainText("DailyTask", taskValue)
-                        clipboard?.setPrimaryClip(cipData)
+                        clipboard.setPrimaryClip(cipData)
                         "任务已复制到剪切板".show(context)
                     }
                 }).build().show()
