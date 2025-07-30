@@ -16,7 +16,9 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_16"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_8"
             android:backgroundTint="@color/white"
             app:cardCornerRadius="@dimen/dp_16"
             app:strokeWidth="0dp">
@@ -24,67 +26,51 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextClock
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/ds_digital"
-                    android:format24Hour="HH:mm:ss"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/dp_24"
-                    android:textColor="@color/black"
-                    android:textSize="56sp" />
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_16">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/dp_16">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tipsView"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed"
+                        android:hint="点击右侧按钮开始执行任务"
+                        android:singleLine="true"
+                        android:textColor="@color/theme_color"
+                        android:textColorHint="@color/lib_hint_color"
+                        android:textSize="@dimen/sp_18"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tipsView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="sans-serif-condensed"
-                            android:hint="请点击右侧按钮开始执行任务"
-                            android:singleLine="true"
-                            android:textColor="@color/theme_color"
-                            android:textColorHint="@color/lib_hint_color"
-                            android:textSize="@dimen/sp_16"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/repeatTimeView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dp_24"
-                            android:layout_marginTop="4dp"
-                            android:background="@drawable/bg_solid_layout_black_radius_8"
-                            android:drawablePadding="@dimen/dp_8"
-                            android:gravity="center"
-                            android:paddingHorizontal="@dimen/dp_8"
-                            android:singleLine="true"
-                            android:text="--秒后刷新每日任务"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/sp_14"
-                            app:drawableStartCompat="@drawable/ic_sand" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/executeTaskButton"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/repeatTimeView"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/dp_16"
-                        android:src="@mipmap/ic_start" />
+                        android:layout_height="@dimen/dp_24"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:background="@drawable/bg_solid_layout_black_radius_8"
+                        android:drawablePadding="@dimen/dp_8"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dp_8"
+                        android:singleLine="true"
+                        android:text="--秒后刷新每日任务"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14"
+                        app:drawableStartCompat="@drawable/ic_sand" />
                 </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/executeTaskButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:src="@mipmap/ic_start" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -127,7 +113,7 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_gravity="bottom"
         android:layout_margin="@dimen/dp_16"
         android:backgroundTint="@color/theme_color"
         android:src="@drawable/ic_add"
