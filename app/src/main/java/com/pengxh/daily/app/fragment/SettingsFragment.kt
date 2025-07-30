@@ -3,7 +3,6 @@ package com.pengxh.daily.app.fragment
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -134,12 +133,7 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
 
     override fun onResume() {
         super.onResume()
-        if (EmailConfigKit.isEmailConfigured()) {
-            binding.emailTagView.backgroundTintList =
-                ColorStateList.valueOf(R.color.ios_green.convertColor(requireContext()))
-        } else {
-            binding.emailTagView.backgroundTintList = ColorStateList.valueOf(Color.RED)
-        }
+        binding.checkBox.isChecked = EmailConfigKit.isEmailConfigured()
 
         binding.floatSwitch.isChecked = Settings.canDrawOverlays(requireContext())
         val serviceIntent = Intent(requireContext(), FloatingWindowService::class.java)
