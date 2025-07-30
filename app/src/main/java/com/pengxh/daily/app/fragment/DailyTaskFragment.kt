@@ -49,6 +49,8 @@ import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 import com.pengxh.kt.lite.widget.dialog.AlertInputDialog
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
+import com.yanzhenjie.recyclerview.OnItemClickListener
+import com.yanzhenjie.recyclerview.OnItemLongClickListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -159,6 +161,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         updateEmptyViewVisibility()
 
         dailyTaskAdapter = DailyTaskAdapter(requireContext(), taskBeans)
+        binding.recyclerView.setOnItemClickListener(itemClickListener)
+        binding.recyclerView.setOnItemLongClickListener(itemLongClickListener)
         binding.recyclerView.adapter = dailyTaskAdapter
         binding.floatingActionButton.attachToRecyclerView(binding.recyclerView)
         binding.recyclerView.addItemDecoration(
@@ -169,6 +173,78 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
         Intent(requireContext(), CountDownTimerService::class.java).apply {
             requireContext().bindService(this, connection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    /**
+     * 列表项单击
+     * */
+    private val itemClickListener = object : OnItemClickListener {
+        override fun onItemClick(view: View?, adapterPosition: Int) {
+            if (isTaskStarted) {
+                "任务进行中，无法修改，请先取消当前任务".show(requireContext())
+                return
+            }
+            AlertControlDialog.Builder()
+                .setContext(requireContext())
+                .setTitle("修改打卡任务")
+                .setMessage("是否需要调整打卡时间？")
+                .setNegativeButton("取消")
+                .setPositiveButton("确定")
+                .setOnDialogButtonClickListener(object :
+                    AlertControlDialog.OnDialogButtonClickListener {
+                    override fun onConfirmClick() {
+                        val item = taskBeans[adapterPosition]
+                        requireActivity().showTimePicker(item, object : OnTimeSelectedCallback {
+                            override fun onTimePicked(time: String) {
+                                item.time = time
+                                dailyTaskDao.update(item)
+                                taskBeans.sortBy { x -> x.time }
+                                dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
+                            }
+                        })
+                    }
+
+                    override fun onCancelClick() {
+
+                    }
+                }).build().show()
+        }
+    }
+
+    /**
+     * 列表项长按
+     * */
+    private val itemLongClickListener = object : OnItemLongClickListener {
+        override fun onItemLongClick(view: View?, adapterPosition: Int) {
+            if (isTaskStarted) {
+                "任务进行中，无法删除，请先取消当前任务".show(requireContext())
+                return
+            }
+            AlertControlDialog.Builder()
+                .setContext(requireContext())
+                .setTitle("删除提示")
+                .setMessage("确定要删除这个任务吗")
+                .setNegativeButton("取消")
+                .setPositiveButton("确定")
+                .setOnDialogButtonClickListener(object :
+                    AlertControlDialog.OnDialogButtonClickListener {
+                    override fun onConfirmClick() {
+                        val item = taskBeans[adapterPosition]
+                        dailyTaskDao.delete(item)
+                        taskBeans.removeAt(adapterPosition)
+                        dailyTaskAdapter.notifyItemRemoved(adapterPosition)
+                        dailyTaskAdapter.notifyItemRangeChanged(
+                            adapterPosition, taskBeans.size - adapterPosition
+                        )
+                        updateEmptyViewVisibility()
+                        binding.floatingActionButton.show(true)
+                    }
+
+                    override fun onCancelClick() {
+
+                    }
+                }).build().show()
         }
     }
 
@@ -209,60 +285,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         }
 
         binding.refreshView.setEnableLoadMore(false)
-
-        dailyTaskAdapter.setOnItemClickListener(object :
-            DailyTaskAdapter.OnItemClickListener<DailyTaskBean> {
-            override fun onItemClick(item: DailyTaskBean, position: Int) {
-                if (isTaskStarted) {
-                    "任务进行中，无法修改，请先取消当前任务".show(requireContext())
-                    return
-                }
-                AlertControlDialog.Builder().setContext(requireContext()).setTitle("修改打卡任务")
-                    .setMessage("是否需要调整打卡时间？").setNegativeButton("取消")
-                    .setPositiveButton("确定").setOnDialogButtonClickListener(object :
-                        AlertControlDialog.OnDialogButtonClickListener {
-                        override fun onConfirmClick() {
-                            requireActivity().showTimePicker(item, object : OnTimeSelectedCallback {
-                                override fun onTimePicked(time: String) {
-                                    item.time = time
-                                    dailyTaskDao.update(item)
-                                    taskBeans.sortBy { x -> x.time }
-                                    dailyTaskAdapter.notifyItemRangeChanged(0, taskBeans.size)
-                                }
-                            })
-                        }
-
-                        override fun onCancelClick() {
-
-                        }
-                    }).build().show()
-            }
-
-            override fun onItemLongClick(item: DailyTaskBean, position: Int) {
-                if (isTaskStarted) {
-                    "任务进行中，无法删除，请先取消当前任务".show(requireContext())
-                    return
-                }
-                AlertControlDialog.Builder().setContext(requireContext()).setTitle("删除提示")
-                    .setMessage("确定要删除这个任务吗").setNegativeButton("取消")
-                    .setPositiveButton("确定").setOnDialogButtonClickListener(object :
-                        AlertControlDialog.OnDialogButtonClickListener {
-                        override fun onConfirmClick() {
-                            dailyTaskDao.delete(item)
-                            taskBeans.removeAt(position)
-                            dailyTaskAdapter.notifyItemRemoved(position)
-                            dailyTaskAdapter.notifyItemRangeChanged(
-                                position, taskBeans.size - position
-                            )
-                            updateEmptyViewVisibility()
-                        }
-
-                        override fun onCancelClick() {
-
-                        }
-                    }).build().show()
-            }
-        })
 
         binding.floatingActionButton.setOnClickListener {
             if (isTaskStarted) {

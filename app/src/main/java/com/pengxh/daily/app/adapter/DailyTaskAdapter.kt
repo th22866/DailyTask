@@ -58,17 +58,6 @@ class DailyTaskAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val taskBean = dataBeans[position]
         holder.taskTimeView.text = taskBean.time
-
-        holder.itemView.setOnClickListener {
-            itemClickListener?.onItemClick(taskBean, position)
-        }
-
-        // 长按监听
-        holder.itemView.setOnLongClickListener {
-            itemClickListener?.onItemLongClick(taskBean, position)
-            true
-        }
-
         if (position == mPosition) {
             holder.itemView.isSelected = true
             holder.taskStateView.visibility = View.VISIBLE
@@ -83,18 +72,6 @@ class DailyTaskAdapter(
             holder.actualTimeView.text = "--:--:--"
             holder.taskTimeView.setTextColor(Color.BLACK)
         }
-    }
-
-    private var itemClickListener: OnItemClickListener<DailyTaskBean>? = null
-
-    fun setOnItemClickListener(listener: OnItemClickListener<DailyTaskBean>) {
-        this.itemClickListener = listener
-    }
-
-    interface OnItemClickListener<T> {
-        fun onItemClick(item: T, position: Int)
-
-        fun onItemLongClick(item: T, position: Int)
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
