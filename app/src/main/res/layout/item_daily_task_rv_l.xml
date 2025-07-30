@@ -1,76 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_stroke_layout_radius_16"
-    android:orientation="horizontal"
-    android:padding="@dimen/dp_24">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/dp_16"
+    app:strokeWidth="0dp">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_16">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/taskStateView"
-            android:layout_width="wrap_content"
+        <!-- 计划时间部分 -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/lib_hint_color"
-            app:cardCornerRadius="@dimen/dp_8">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_8"
-                android:text="计划时间"
-                android:textColor="@color/white" />
-        </androidx.cardview.widget.CardView>
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/taskTimeView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
-            android:gravity="center"
-            android:text="08:00"
-            android:textColor="@color/black"
-            android:textSize="30sp" />
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="计划时间"
+                    android:textColor="@color/lib_hint_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/actualTimeCardView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+                <TextView
+                    android:id="@+id/taskTimeView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:text="08:00"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/theme_color"
-            app:cardCornerRadius="@dimen/dp_8">
-
-            <TextView
-                android:layout_width="match_parent"
+            <!-- 中间的对比图标 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_8"
-                android:text="实际时间"
-                android:textColor="@color/white" />
-        </androidx.cardview.widget.CardView>
+                app:cardBackgroundColor="#F5F5F5"
+                app:cardCornerRadius="20dp"
+                app:strokeColor="@color/lib_hint_color"
+                app:strokeWidth="2dp">
 
-        <TextView
-            android:id="@+id/actualTimeView"
-            android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_right" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- 分隔线 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="10dp"
+            android:background="@drawable/divider_gradient" />
+
+        <!-- 实际时间部分 -->
+        <LinearLayout
+            android:id="@+id/actualTimeCardView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
-            android:gravity="center"
-            android:text="--:--:--"
-            android:textColor="@color/black"
-            android:textSize="30sp" />
-    </LinearLayout>
-</LinearLayout>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="实际时间"
+                    android:textColor="@color/theme_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/actualTimeView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:text="--:--:--"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
