@@ -11,8 +11,8 @@ object DatabaseWrapper {
         return dailyTaskDao.loadAll() as ArrayList<DailyTaskBean>
     }
 
-    fun queryTaskByTime(time: String): Int {
-        return dailyTaskDao.queryTaskByTime(time)
+    fun isTaskTimeExist(time: String): Boolean {
+        return dailyTaskDao.queryTaskByTime(time) > 0
     }
 
     fun updateTask(bean: DailyTaskBean) {

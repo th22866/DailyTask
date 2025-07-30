@@ -371,7 +371,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 timePicker.selectedSecond
             )
 
-            if (DatabaseWrapper.queryTaskByTime(time) > 0) {
+            if (DatabaseWrapper.isTaskTimeExist(time)) {
                 "任务时间点已存在".show(requireContext())
                 return@setOnClickListener
             }
@@ -402,7 +402,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     try {
                         val tasks = gson.fromJson<List<DailyTaskBean>>(value, type)
                         for (task in tasks) {
-                            if (DatabaseWrapper.queryTaskByTime(task.time) > 0) {
+                            if (DatabaseWrapper.isTaskTimeExist(task.time)) {
                                 continue
                             }
                             DatabaseWrapper.insert(task)
