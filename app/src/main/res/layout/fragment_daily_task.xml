@@ -13,12 +13,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_16"
             android:backgroundTint="@color/white"
-            app:cardCornerRadius="@dimen/dp_16">
+            app:cardCornerRadius="@dimen/dp_16"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                     android:fontFamily="@font/ds_digital"
                     android:format24Hour="HH:mm:ss"
                     android:gravity="center"
-                    android:paddingVertical="@dimen/dp_32"
+                    android:paddingVertical="@dimen/dp_24"
                     android:textColor="@color/black"
                     android:textSize="56sp" />
 
@@ -85,7 +86,7 @@
                         android:src="@mipmap/ic_start" />
                 </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <RelativeLayout
             android:layout_width="match_parent"
