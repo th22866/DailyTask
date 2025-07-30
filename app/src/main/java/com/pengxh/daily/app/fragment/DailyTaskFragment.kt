@@ -370,6 +370,11 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 timePicker.selectedMinute,
                 timePicker.selectedSecond
             )
+
+            if (DatabaseWrapper.queryTaskByTime(time) > 0) {
+                "任务时间点已存在".show(requireContext())
+                return@setOnClickListener
+            }
             binding.refreshView.visibility = View.VISIBLE
             binding.emptyView.visibility = View.GONE
             val bean = DailyTaskBean().apply {
@@ -396,8 +401,11 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     val type = object : TypeToken<List<DailyTaskBean>>() {}.type
                     try {
                         val tasks = gson.fromJson<List<DailyTaskBean>>(value, type)
-                        tasks.forEach {
-                            DatabaseWrapper.insert(it)
+                        for (task in tasks) {
+                            if (DatabaseWrapper.queryTaskByTime(task.time) > 0) {
+                                continue
+                            }
+                            DatabaseWrapper.insert(task)
                         }
                         binding.refreshView.visibility = View.VISIBLE
                         binding.emptyView.visibility = View.GONE
