@@ -1,10 +1,8 @@
 package com.pengxh.daily.app
 
 import android.app.Application
-import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room.databaseBuilder
 import com.pengxh.daily.app.utils.DailyTaskDataBase
-import com.pengxh.daily.app.vm.EventViewModel
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import kotlin.properties.Delegates
 
@@ -22,10 +20,6 @@ class DailyTaskApplication : Application() {
         fun get() = application
     }
 
-    val eventViewModel by lazy {
-        ViewModelProvider.AndroidViewModelFactory.getInstance(this)
-            .create(EventViewModel::class.java)
-    }
     lateinit var dataBase: DailyTaskDataBase
 
     override fun onCreate() {

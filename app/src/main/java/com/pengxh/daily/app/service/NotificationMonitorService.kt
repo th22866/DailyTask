@@ -5,8 +5,8 @@ import android.os.BatteryManager
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
-import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.bean.NotificationBean
+import com.pengxh.daily.app.event.MessageEvent
 import com.pengxh.daily.app.extensions.backToMainActivity
 import com.pengxh.daily.app.extensions.openApplication
 import com.pengxh.daily.app.extensions.sendEmail
@@ -16,6 +16,7 @@ import com.pengxh.daily.app.utils.DatabaseWrapper
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
 import com.pengxh.kt.lite.utils.SaveKeyValues
+import org.greenrobot.eventbus.EventBus
 
 /**
  * @description: 状态栏监听服务
@@ -78,9 +79,9 @@ class NotificationMonitorService : NotificationListenerService() {
                 )
                 "当前手机剩余电量为：${capacity}%".sendEmail(this, "查询手机电量通知", false)
             } else if (notice.contains("启动")) {
-                DailyTaskApplication.get().eventViewModel.sendEvent(Constant.START_DAILY_TASK_CODE)
+                EventBus.getDefault().post(MessageEvent(Constant.START_DAILY_TASK_CODE))
             } else if (notice.contains("停止")) {
-                DailyTaskApplication.get().eventViewModel.sendEvent(Constant.STOP_DAILY_TASK_CODE)
+                EventBus.getDefault().post(MessageEvent(Constant.STOP_DAILY_TASK_CODE))
             } else {
                 val key = SaveKeyValues.getValue(Constant.TASK_NAME_KEY, "打卡") as String
                 if (notice.contains(key)) {
