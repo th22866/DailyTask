@@ -19,7 +19,7 @@ import com.pengxh.kt.lite.utils.LoadingDialog
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import com.pengxh.kt.lite.widget.TitleBarView
-import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
+import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 
 class EmailConfigActivity : KotlinBaseActivity<ActivityEmailConfigBinding>(), Handler.Callback {
 
@@ -103,12 +103,20 @@ class EmailConfigActivity : KotlinBaseActivity<ActivityEmailConfigBinding>(), Ha
                     Constant.EMAIL_TITLE_KEY, binding.emailTitleView.text.toString()
                 )
 
-                AlertMessageDialog.Builder().setContext(context).setTitle("温馨提醒")
-                    .setMessage("邮箱配置完成")
+                AlertControlDialog.Builder()
+                    .setContext(context)
+                    .setTitle("温馨提醒")
+                    .setMessage("邮箱配置完成，是否发送测试邮件？")
+                    .setNegativeButton("取消")
                     .setPositiveButton("好的").setOnDialogButtonClickListener(object :
-                        AlertMessageDialog.OnDialogButtonClickListener {
-                        override fun onConfirmClick() {
+                        AlertControlDialog.OnDialogButtonClickListener {
+                        override fun onCancelClick() {
 
+                        }
+
+                        override fun onConfirmClick() {
+                            LoadingDialog.show(context, "邮件发送中，请稍后....")
+                            "这是一封测试邮件，不必关注".sendEmail(context, "邮箱测试", true)
                         }
                     }).build().show()
             }
@@ -151,15 +159,6 @@ class EmailConfigActivity : KotlinBaseActivity<ActivityEmailConfigBinding>(), Ha
                 }
             }
         })
-
-        binding.sendEmailButton.setOnClickListener {
-            if (!EmailConfigKit.isEmailConfigured()) {
-                "请先保存邮箱配置".show(this)
-                return@setOnClickListener
-            }
-            LoadingDialog.show(this, "邮件发送中，请稍后....")
-            "这是一封测试邮件，不必关注".sendEmail(this, "邮箱测试", true)
-        }
     }
 
     override fun handleMessage(msg: Message): Boolean {
