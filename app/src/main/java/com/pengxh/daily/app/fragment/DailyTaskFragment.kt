@@ -160,6 +160,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
         dailyTaskAdapter = DailyTaskAdapter(requireContext(), taskBeans)
         binding.recyclerView.adapter = dailyTaskAdapter
+        binding.floatingActionButton.attachToRecyclerView(binding.recyclerView)
         binding.recyclerView.addItemDecoration(
             RecyclerViewItemOffsets(
                 marginOffset, marginOffset shr 1, marginOffset, marginOffset shr 1
@@ -263,7 +264,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             }
         })
 
-        binding.addTimerButton.setOnClickListener {
+        binding.floatingActionButton.setOnClickListener {
             if (isTaskStarted) {
                 "任务进行中，无法添加，请先取消当前任务".show(requireContext())
                 return@setOnClickListener
