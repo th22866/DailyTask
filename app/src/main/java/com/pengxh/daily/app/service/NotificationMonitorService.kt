@@ -12,6 +12,7 @@ import com.pengxh.daily.app.extensions.openApplication
 import com.pengxh.daily.app.extensions.sendEmail
 import com.pengxh.daily.app.fragment.SettingsFragment
 import com.pengxh.daily.app.utils.Constant
+import com.pengxh.daily.app.utils.DatabaseWrapper
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
 import com.pengxh.kt.lite.utils.SaveKeyValues
@@ -25,7 +26,6 @@ import com.pengxh.kt.lite.utils.SaveKeyValues
 class NotificationMonitorService : NotificationListenerService() {
 
     private val kTag = "MonitorService"
-    private val noticeDao by lazy { DailyTaskApplication.get().dataBase.noticeDao() }
     private val batteryManager by lazy { getSystemService(BATTERY_SERVICE) as BatteryManager }
 
     /**
@@ -59,7 +59,7 @@ class NotificationMonitorService : NotificationListenerService() {
                 notificationMsg = notice
                 postTime = System.currentTimeMillis().timestampToCompleteDate()
             }.also {
-                noticeDao.insert(it)
+                DatabaseWrapper.insertNotice(it)
             }
         }
 

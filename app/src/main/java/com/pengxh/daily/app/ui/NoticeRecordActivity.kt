@@ -4,11 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.bean.NotificationBean
 import com.pengxh.daily.app.databinding.ActivityNoticeBinding
 import com.pengxh.daily.app.extensions.initImmersionBar
+import com.pengxh.daily.app.utils.DatabaseWrapper
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseActivity
@@ -18,7 +18,6 @@ import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 
 class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
 
-    private val noticeDao by lazy { DailyTaskApplication.get().dataBase.noticeDao() }
     private lateinit var noticeAdapter: NormalRecyclerAdapter<NotificationBean>
     private var isRefresh = false
     private var isLoadMore = false
@@ -44,7 +43,7 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
                     .setOnDialogButtonClickListener(object :
                         AlertMessageDialog.OnDialogButtonClickListener {
                         override fun onConfirmClick() {
-                            noticeDao.deleteAll()
+                            DatabaseWrapper.deleteAllNotice()
                             binding.emptyView.visibility = View.VISIBLE
                             binding.recyclerView.visibility = View.GONE
                         }
@@ -111,6 +110,6 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
     }
 
     private fun getNotificationRecord(): MutableList<NotificationBean> {
-        return noticeDao.loadNoticeByTime(10, (offset - 1) * 10)
+        return DatabaseWrapper.loadNoticeByTime(10, (offset - 1) * 10)
     }
 }
