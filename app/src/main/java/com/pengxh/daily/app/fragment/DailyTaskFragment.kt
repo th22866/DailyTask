@@ -22,6 +22,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
+import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.adapter.DailyTaskAdapter
 import com.pengxh.daily.app.bean.DailyTaskBean
@@ -124,7 +125,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         binding.recyclerView.setOnItemClickListener(itemClickListener)
         binding.recyclerView.setOnItemLongClickListener(itemLongClickListener)
         binding.recyclerView.adapter = dailyTaskAdapter
-        binding.floatingActionButton.attachToRecyclerView(binding.recyclerView)
         binding.recyclerView.addItemDecoration(
             RecyclerViewItemOffsets(
                 marginOffset, marginOffset shr 1, marginOffset, marginOffset shr 1
@@ -133,6 +133,32 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
 
         Intent(requireContext(), CountDownTimerService::class.java).apply {
             requireContext().bindService(this, connection, Context.BIND_AUTO_CREATE)
+        }
+
+        DailyTaskApplication.get().sharedViewModel.addTaskCode.observe(viewLifecycleOwner) {
+            if (it == 1) {
+                if (isTaskStarted) {
+                    "任务进行中，无法添加，请先取消当前任务".show(requireContext())
+                    return@observe
+                }
+
+                if (taskBeans.isNotEmpty()) {
+                    addTask()
+                } else {
+                    BottomActionSheet.Builder()
+                        .setContext(requireContext())
+                        .setActionItemTitle(arrayListOf("添加任务", "导入任务"))
+                        .setItemTextColor(R.color.theme_color.convertColor(requireContext()))
+                        .setOnActionSheetListener(object : BottomActionSheet.OnActionSheetListener {
+                            override fun onActionItemClick(position: Int) {
+                                when (position) {
+                                    0 -> addTask()
+                                    1 -> importTask()
+                                }
+                            }
+                        }).build().show()
+                }
+            }
         }
     }
 
@@ -201,7 +227,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                                 binding.refreshView.visibility = View.VISIBLE
                                 binding.emptyView.visibility = View.GONE
                             }
-                            binding.floatingActionButton.show(true)
                         } catch (e: IndexOutOfBoundsException) {
                             e.printStackTrace()
                             "删除失败，请刷新重试".show(requireContext())
@@ -248,30 +273,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         }
 
         binding.refreshView.setEnableLoadMore(false)
-
-        binding.floatingActionButton.setOnClickListener {
-            if (isTaskStarted) {
-                "任务进行中，无法添加，请先取消当前任务".show(requireContext())
-                return@setOnClickListener
-            }
-
-            if (taskBeans.isNotEmpty()) {
-                addTask()
-            } else {
-                BottomActionSheet.Builder()
-                    .setContext(requireContext())
-                    .setActionItemTitle(arrayListOf("添加任务", "导入任务"))
-                    .setItemTextColor(R.color.theme_color.convertColor(requireContext()))
-                    .setOnActionSheetListener(object : BottomActionSheet.OnActionSheetListener {
-                        override fun onActionItemClick(position: Int) {
-                            when (position) {
-                                0 -> addTask()
-                                1 -> importTask()
-                            }
-                        }
-                    }).build().show()
-            }
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -2,6 +2,7 @@ package com.pengxh.daily.app.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
@@ -10,11 +11,13 @@ import android.view.animation.ScaleAnimation
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.forEachIndexed
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.pengxh.daily.app.DailyTaskApplication
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.adapter.BaseFragmentAdapter
 import com.pengxh.daily.app.databinding.ActivityMainBinding
@@ -31,6 +34,7 @@ import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
 
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
+    private val kTag = "MainActivity"
     private val fragmentPages = ArrayList<Fragment>()
     private var menuItem: MenuItem? = null
     private lateinit var insetsController: WindowInsetsControllerCompat
@@ -70,12 +74,19 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     override fun initEvent() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            if (item.itemId == R.id.nav_daily) {
-                binding.viewPager.currentItem = 0
-            } else if (item.itemId == R.id.nav_settings) {
-                binding.viewPager.currentItem = 1
+            val itemId = item.itemId
+            val menuItems = binding.bottomNavigation.menu
+            menuItems.forEachIndexed { index, menuItem ->
+                if (menuItems[index].itemId == itemId) {
+                    binding.viewPager.currentItem = index
+                    return@forEachIndexed
+                }
             }
             false
+        }
+
+        binding.floatingActionButton.setOnClickListener {
+            DailyTaskApplication.get().sharedViewModel.addTaskCode.value = 1
         }
 
         binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -94,8 +105,21 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
                 currentMenuItem.isChecked = false
 
                 // 更新新的选中菜单项
-                menuItem = binding.bottomNavigation.menu[position]
-                menuItem?.isChecked = true
+                when (position) {
+                    0 -> {
+                        menuItem = binding.bottomNavigation.menu[position]
+                        menuItem?.isChecked = true
+                    }
+
+                    1 -> {
+                        Log.d(kTag, "onPageSelected: 空白项不处理")
+                    }
+
+                    2 -> {
+                        menuItem = binding.bottomNavigation.menu[position]
+                        menuItem?.isChecked = true
+                    }
+                }
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
