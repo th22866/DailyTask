@@ -66,9 +66,9 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
                 override fun convertView(
                     viewHolder: ViewHolder, position: Int, item: NotificationBean
                 ) {
-                    viewHolder.setText(R.id.titleView, "标题：${item.notificationTitle}")
-                        .setText(R.id.packageNameView, "包名：${item.packageName}")
-                        .setText(R.id.messageView, "内容：${item.notificationMsg}")
+                    viewHolder.setText(R.id.titleView, item.notificationTitle)
+                        .setText(R.id.packageNameView, item.packageName)
+                        .setText(R.id.messageView, item.notificationMsg)
                         .setText(R.id.postTimeView, item.postTime)
                 }
             }
