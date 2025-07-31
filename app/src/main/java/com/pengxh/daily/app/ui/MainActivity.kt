@@ -2,7 +2,6 @@ package com.pengxh.daily.app.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
@@ -106,20 +105,10 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
                 // 更新新的选中菜单项
                 when (position) {
-                    0 -> {
-                        menuItem = binding.bottomNavigation.menu[position]
-                        menuItem?.isChecked = true
-                    }
-
-                    1 -> {
-                        Log.d(kTag, "onPageSelected: 空白项不处理")
-                    }
-
-                    2 -> {
-                        menuItem = binding.bottomNavigation.menu[position]
-                        menuItem?.isChecked = true
-                    }
+                    0 -> menuItem = binding.bottomNavigation.menu[position]
+                    1 -> menuItem = binding.bottomNavigation.menu[position + 1]
                 }
+                menuItem?.isChecked = true
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
