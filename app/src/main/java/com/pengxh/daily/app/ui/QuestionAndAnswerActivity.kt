@@ -1,6 +1,5 @@
 package com.pengxh.daily.app.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import com.google.gson.Gson
@@ -12,7 +11,6 @@ import com.pengxh.daily.app.model.QuestionAnAnswerModel
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseActivity
-import com.pengxh.kt.lite.divider.RecyclerViewItemDivider
 import com.pengxh.kt.lite.extensions.readAssetsFile
 import com.pengxh.kt.lite.utils.HtmlRenderEngine
 import com.pengxh.kt.lite.widget.TitleBarView
@@ -33,7 +31,6 @@ class QuestionAndAnswerActivity : KotlinBaseActivity<ActivityQuestionAndAnswerBi
         val dataRows = gson.fromJson<MutableList<QuestionAnAnswerModel>>(
             assetsFile, object : TypeToken<MutableList<QuestionAnAnswerModel>>() {}.type
         )
-        binding.recyclerView.addItemDecoration(RecyclerViewItemDivider(0f, 0f, Color.LTGRAY))
         binding.recyclerView.adapter = object :
             NormalRecyclerAdapter<QuestionAnAnswerModel>(R.layout.item_q_a_rv_l, dataRows) {
             override fun convertView(
