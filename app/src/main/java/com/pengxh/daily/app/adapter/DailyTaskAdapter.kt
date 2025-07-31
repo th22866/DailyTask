@@ -6,14 +6,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.pengxh.daily.app.R
 import com.pengxh.daily.app.bean.DailyTaskBean
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter.ItemComparator
+import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.extensions.convertColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 class DailyTaskAdapter(
     private val context: Context,
     private val dataBeans: MutableList<DailyTaskBean>
-) : RecyclerView.Adapter<DailyTaskAdapter.ItemViewHolder>() {
+) : RecyclerView.Adapter<ViewHolder>() {
 
     private val kTag = "DailyTaskAdapter"
     private var layoutInflater = LayoutInflater.from(context)
@@ -48,33 +48,30 @@ class DailyTaskAdapter(
 
     override fun getItemId(position: Int): Long = position.toLong()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
             layoutInflater.inflate(R.layout.item_daily_task_rv_l, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val taskBean = dataBeans[position]
-        holder.taskTimeView.text = taskBean.time
+        holder.setText(R.id.taskTimeView, taskBean.time)
+        val arrowView = holder.getView<AppCompatImageView>(R.id.arrowView)
         if (position == mPosition) {
             holder.itemView.isSelected = true
-            holder.actualTimeCardView.visibility = View.VISIBLE
-            holder.actualTimeView.text = actualTime
-            holder.taskTimeView.setTextColor("#CCCCCC".toColorInt())
-            holder.actualTimeView.setTextColor(R.color.theme_color.convertColor(context))
+            holder.setVisibility(R.id.actualTimeCardView, View.VISIBLE)
+                .setText(R.id.actualTimeView, actualTime)
+                .setTextColor(R.id.actualTimeView, R.color.theme_color.convertColor(context))
+                .setTextColor(R.id.taskTimeView, "#CCCCCC".toColorInt())
+            arrowView.animate().rotation(90f).setDuration(500).start()
         } else {
             holder.itemView.isSelected = false
-            holder.actualTimeCardView.visibility = View.GONE
-            holder.actualTimeView.text = "--:--:--"
-            holder.taskTimeView.setTextColor(Color.BLACK)
+            holder.setVisibility(R.id.actualTimeCardView, View.GONE)
+                .setText(R.id.actualTimeView, "--:--:--")
+                .setTextColor(R.id.taskTimeView, Color.BLACK)
+            arrowView.animate().rotation(0f).setDuration(500).start()
         }
-    }
-
-    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var actualTimeCardView: LinearLayout = itemView.findViewById(R.id.actualTimeCardView)
-        var actualTimeView: TextView = itemView.findViewById(R.id.actualTimeView)
-        var taskTimeView: TextView = itemView.findViewById(R.id.taskTimeView)
     }
 
     fun refresh(
