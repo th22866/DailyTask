@@ -34,7 +34,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="16dp">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -43,19 +43,26 @@
                 android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
-            <com.pengxh.kt.lite.widget.DeleteEditText
-                android:id="@+id/emailSendAddressView"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="@null"
-                android:gravity="center_vertical|end"
-                android:hint="如：xxxxx@qq.com"
-                android:inputType="textEmailAddress"
-                android:paddingVertical="@dimen/dp_8"
-                android:singleLine="true"
-                android:textColorHint="@color/lib_hint_color"
-                android:textSize="@dimen/sp_16" />
+                app:boxBackgroundMode="none"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailSendAddressView"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:gravity="end|center_vertical"
+                    android:hint="如：xxxxx@qq.com"
+                    android:inputType="textEmailAddress"
+                    android:padding="0dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp_16" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <View
@@ -71,7 +78,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="16dp">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -80,18 +87,25 @@
                 android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
-            <com.pengxh.kt.lite.widget.DeleteEditText
-                android:id="@+id/emailSendCodeView"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="@null"
-                android:gravity="center_vertical|end"
-                android:hint="如：wkepaekhmlalbgji"
-                android:paddingVertical="@dimen/dp_8"
-                android:singleLine="true"
-                android:textColorHint="@color/lib_hint_color"
-                android:textSize="@dimen/sp_16" />
+                app:boxBackgroundMode="none"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="password_toggle"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailSendCodeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:gravity="end|center_vertical"
+                    android:inputType="textPassword"
+                    android:padding="0dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp_16" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <View
@@ -107,7 +121,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="16dp">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -116,18 +130,25 @@
                 android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
-            <com.pengxh.kt.lite.widget.DeleteEditText
-                android:id="@+id/emailSendServerView"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="@null"
-                android:gravity="center_vertical|end"
-                android:hint="如：smtp.qq.com"
-                android:paddingVertical="@dimen/dp_8"
-                android:singleLine="true"
-                android:textColorHint="@color/lib_hint_color"
-                android:textSize="@dimen/sp_16" />
+                app:boxBackgroundMode="none"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailSendServerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:gravity="end|center_vertical"
+                    android:hint="如：smtp.qq.com"
+                    android:padding="0dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp_16" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <View
@@ -143,7 +164,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="16dp">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -152,20 +173,27 @@
                 android:textColor="@color/text_default_color"
                 android:textSize="@dimen/sp_16" />
 
-            <com.pengxh.kt.lite.widget.DeleteEditText
-                android:id="@+id/emailSendPortView"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:background="@null"
-                android:gravity="center_vertical|end"
-                android:hint="如：587"
-                android:inputType="number"
-                android:maxLength="5"
-                android:paddingVertical="@dimen/dp_8"
-                android:singleLine="true"
-                android:textColorHint="@color/lib_hint_color"
-                android:textSize="@dimen/sp_16" />
+                app:boxBackgroundMode="none"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailSendPortView"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:gravity="end|center_vertical"
+                    android:hint="如：587"
+                    android:inputType="number"
+                    android:maxLength="5"
+                    android:padding="0dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp_16" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -178,7 +206,7 @@
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -187,18 +215,26 @@
             android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
-        <com.pengxh.kt.lite.widget.DeleteEditText
-            android:id="@+id/emailInboxView"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:background="@null"
-            android:gravity="center_vertical|end"
-            android:hint="如：xxxxx@qq.com"
-            android:paddingVertical="@dimen/dp_8"
-            android:singleLine="true"
-            android:textColorHint="@color/lib_hint_color"
-            android:textSize="@dimen/sp_16" />
+            app:boxBackgroundMode="none"
+            app:boxStrokeWidthFocused="0dp"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailInboxView"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:gravity="end|center_vertical"
+                android:hint="如：xxxxx@qq.com"
+                android:inputType="textEmailAddress"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:textSize="@dimen/sp_16" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -210,7 +246,7 @@
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -219,17 +255,24 @@
             android:textColor="@color/text_default_color"
             android:textSize="@dimen/sp_16" />
 
-        <com.pengxh.kt.lite.widget.DeleteEditText
-            android:id="@+id/emailTitleView"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:background="@null"
-            android:gravity="center_vertical|end"
-            android:hint="如：打卡结果通知"
-            android:paddingVertical="@dimen/dp_8"
-            android:singleLine="true"
-            android:textColorHint="@color/lib_hint_color"
-            android:textSize="@dimen/sp_16" />
+            app:boxBackgroundMode="none"
+            app:boxStrokeWidthFocused="0dp"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailTitleView"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:gravity="end|center_vertical"
+                android:hint="如：打卡结果通知"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:textSize="@dimen/sp_16" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 </LinearLayout>
