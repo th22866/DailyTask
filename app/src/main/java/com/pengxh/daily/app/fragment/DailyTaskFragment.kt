@@ -162,7 +162,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private val itemClickListener = object : OnItemClickListener {
         override fun onItemClick(view: View?, adapterPosition: Int) {
             if (isTaskStarted) {
-                "任务进行中，无法修改，请先取消当前任务".show(requireContext())
+                "任务进行中，无法修改".show(requireContext())
                 return
             }
             val item = taskBeans[adapterPosition]
@@ -197,7 +197,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
     private val itemLongClickListener = object : OnItemLongClickListener {
         override fun onItemLongClick(view: View?, adapterPosition: Int) {
             if (isTaskStarted) {
-                "任务进行中，无法删除，请先取消当前任务".show(requireContext())
+                "任务进行中，无法删除".show(requireContext())
                 return
             }
             AlertControlDialog.Builder()

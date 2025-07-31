@@ -30,11 +30,19 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
+                <TextClock
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:format12Hour="MM月dd日 HH:mm:ss EEEE"
+                    android:format24Hour="MM月dd日 HH:mm:ss EEEE"
+                    android:textSize="@dimen/sp_16" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tipsView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginVertical="@dimen/dp_8"
                     android:fontFamily="sans-serif-condensed"
                     android:hint="点击右侧按钮开始执行任务"
                     android:singleLine="true"
@@ -47,7 +55,6 @@
                     android:id="@+id/repeatTimeView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_8"
                     android:background="@drawable/bg_solid_layout_black_radius_4"
                     android:drawablePadding="@dimen/dp_4"
                     android:paddingHorizontal="@dimen/dp_8"

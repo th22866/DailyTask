@@ -71,10 +71,9 @@ class CountDownTimerService : Service() {
         Log.d(kTag, "startCountDown: 倒计时任务开始，执行第${index}个任务")
         countDownTimer = object : CountDownTimer(seconds * 1000L, 1000L) {
             override fun onTick(millisUntilFinished: Long) {
+                val seconds = (millisUntilFinished / 1000).toInt()
                 val notification = notificationBuilder.apply {
-                    setContentText(
-                        "${(millisUntilFinished / 1000).toInt().formatTime()}后执行第${index}个任务"
-                    )
+                    setContentText("${seconds.formatTime()}后执行第${index}个任务")
                 }.build()
                 notificationManager.notify(notificationId, notification)
             }
