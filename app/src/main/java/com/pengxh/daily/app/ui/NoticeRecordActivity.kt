@@ -14,7 +14,7 @@ import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.divider.RecyclerViewItemDivider
 import com.pengxh.kt.lite.widget.TitleBarView
-import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
+import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 
 class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
 
@@ -35,13 +35,18 @@ class NoticeRecordActivity : KotlinBaseActivity<ActivityNoticeBinding>() {
             }
 
             override fun onRightClick() {
-                AlertMessageDialog.Builder()
+                AlertControlDialog.Builder()
                     .setContext(this@NoticeRecordActivity)
                     .setTitle("温馨提示")
                     .setMessage("此操作将会清空所有通知记录，且不可恢复")
+                    .setNegativeButton("取消")
                     .setPositiveButton("知道了")
                     .setOnDialogButtonClickListener(object :
-                        AlertMessageDialog.OnDialogButtonClickListener {
+                        AlertControlDialog.OnDialogButtonClickListener {
+                        override fun onCancelClick() {
+
+                        }
+
                         override fun onConfirmClick() {
                             DatabaseWrapper.deleteAllNotice()
                             binding.emptyView.visibility = View.VISIBLE

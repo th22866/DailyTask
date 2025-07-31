@@ -42,7 +42,7 @@ class NotificationMonitorService : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val extras = sbn.notification.extras
         // 获取接收消息APP的包名
-        val packageName = sbn.packageName
+        val pkg = sbn.packageName
         // 获取接收消息的标题
         val title = extras.getString(Notification.EXTRA_TITLE) ?: ""
         // 获取接收消息的内容
@@ -52,9 +52,10 @@ class NotificationMonitorService : NotificationListenerService() {
         }
         SettingsFragment.weakReferenceHandler?.sendEmptyMessage(Constant.NOTICE_LISTENER_CONNECTED_CODE)
 
-        if (notice != Constant.FOREGROUND_RUNNING_SERVICE_TITLE && packageName != "android") {
+        // 保存指定包名的通知，其他的一律不保存
+        if (pkg == Constant.DING_DING || pkg == Constant.WECHAT || pkg == Constant.WEWORK || pkg == Constant.QQ || pkg == Constant.TIM || pkg == Constant.ZFB) {
             NotificationBean().apply {
-                this.packageName = packageName //重复冲突，this关键字指明是哪个
+                packageName = pkg
                 notificationTitle = title
                 notificationMsg = notice
                 postTime = System.currentTimeMillis().timestampToCompleteDate()
@@ -64,14 +65,14 @@ class NotificationMonitorService : NotificationListenerService() {
         }
 
         // 钉钉打卡通知
-        if (packageName == Constant.DING_DING && notice.contains("成功")) {
+        if (pkg == Constant.DING_DING && notice.contains("成功")) {
             backToMainActivity()
             "即将发送通知邮件，请注意查收".show(this)
             notice.sendEmail(this, null, false)
         }
 
         // 其他消息指令
-        if (packageName == Constant.WECHAT || packageName == Constant.QQ || packageName == Constant.TIM || packageName == Constant.ZFB) {
+        if (pkg == Constant.WECHAT || pkg == Constant.WEWORK || pkg == Constant.QQ || pkg == Constant.TIM || pkg == Constant.ZFB) {
             if (notice.contains("电量")) {
                 val capacity = batteryManager.getIntProperty(
                     BatteryManager.BATTERY_PROPERTY_CAPACITY
