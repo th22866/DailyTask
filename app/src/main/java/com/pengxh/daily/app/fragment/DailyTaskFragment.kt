@@ -27,7 +27,6 @@ import com.pengxh.daily.app.R
 import com.pengxh.daily.app.adapter.DailyTaskAdapter
 import com.pengxh.daily.app.bean.DailyTaskBean
 import com.pengxh.daily.app.databinding.FragmentDailyTaskBinding
-import com.pengxh.daily.app.event.MessageEvent
 import com.pengxh.daily.app.extensions.backToMainActivity
 import com.pengxh.daily.app.extensions.convertToTimeEntity
 import com.pengxh.daily.app.extensions.diffCurrent
@@ -56,18 +55,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicInteger
 
 class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handler.Callback {
 
+    companion object {
+        var weakReferenceHandler: WeakReferenceHandler? = null
+    }
+
     private val kTag = "DailyTaskFragment"
     private val marginOffset by lazy { 16.dp2px(requireContext()) }
     private val gson by lazy { Gson() }
-    private val weakReferenceHandler = WeakReferenceHandler(this)
     private val repeatTaskHandler = Handler(Looper.getMainLooper())
     private val dailyTaskHandler = Handler(Looper.getMainLooper())
     private lateinit var dailyTaskAdapter: DailyTaskAdapter
@@ -106,13 +105,8 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         return FragmentDailyTaskBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        EventBus.getDefault().register(this)
-        Log.d(kTag, "onCreate: 注册EventBus")
-    }
-
     override fun initOnCreate(savedInstanceState: Bundle?) {
+        weakReferenceHandler = WeakReferenceHandler(this)
         taskBeans = DatabaseWrapper.loadAllTask()
         if (taskBeans.isEmpty()) {
             binding.refreshView.visibility = View.GONE
@@ -275,52 +269,6 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         binding.refreshView.setEnableLoadMore(false)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: MessageEvent) {
-        when (event.code) {
-            Constant.START_COUNT_DOWN_TIMER_CODE -> {
-                Log.d(kTag, "开始超时倒计时")
-                val time = SaveKeyValues.getValue(
-                    Constant.STAY_DD_TIMEOUT_KEY, Constant.DEFAULT_OVER_TIME
-                ) as String
-                //去掉时间的s
-                val timeValue = time.dropLast(1).toInt()
-                timeoutTimer = object : CountDownTimer(timeValue * 1000L, 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        val tick = millisUntilFinished / 1000
-                        FloatingWindowService.weakReferenceHandler?.apply {
-                            val message = obtainMessage()
-                            message.what = Constant.TICK_TIME_CODE
-                            message.obj = tick
-                            sendMessage(message)
-                        }
-                    }
-
-                    override fun onFinish() {
-                        //如果倒计时结束，那么表明没有收到打卡成功的通知
-                        requireContext().backToMainActivity()
-                        "未监听到打卡通知，即将发送异常日志邮件，请注意查收".show(
-                            requireContext()
-                        )
-                        "".sendEmail(requireContext(), null, false)
-                    }
-                }
-                timeoutTimer?.start()
-            }
-
-            Constant.CANCEL_COUNT_DOWN_TIMER_CODE -> {
-                timeoutTimer?.cancel()
-                timeoutTimer = null
-                Log.d(kTag, "取消超时定时器，执行下一个任务")
-                weakReferenceHandler.sendEmptyMessage(Constant.EXECUTE_NEXT_TASK_CODE)
-            }
-
-            Constant.START_DAILY_TASK_CODE -> startExecuteTask(true)
-
-            Constant.STOP_DAILY_TASK_CODE -> stopExecuteTask(true)
-        }
-    }
-
     private fun startExecuteTask(isRemote: Boolean) {
         if (DatabaseWrapper.loadAllTask().isEmpty()) {
             "循环任务启动失败，请先添加任务时间点".sendEmail(
@@ -459,17 +407,21 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         val taskIndex = taskBeans.getTaskIndex()
         Log.d(kTag, "任务index是: $taskIndex")
         if (taskIndex == -1) {
-            weakReferenceHandler.sendEmptyMessage(Constant.COMPLETED_ALL_TASK_CODE)
+            weakReferenceHandler?.sendEmptyMessage(Constant.COMPLETED_ALL_TASK_CODE)
         } else {
-            val message = weakReferenceHandler.obtainMessage()
-            message.what = Constant.START_TASK_CODE
-            message.obj = taskIndex
-            weakReferenceHandler.sendMessage(message)
+            weakReferenceHandler?.let {
+                val message = it.obtainMessage()
+                message.what = Constant.START_TASK_CODE
+                message.obj = taskIndex
+                it.sendMessage(message)
+            }
         }
     }
 
     override fun handleMessage(msg: Message): Boolean {
         when (msg.what) {
+            Constant.START_DAILY_TASK_CODE -> startExecuteTask(true)
+
             Constant.START_TASK_CODE -> {
                 val index = msg.obj as Int
                 val task = taskBeans[index]
@@ -490,6 +442,43 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 dailyTaskHandler.post(dailyTaskRunnable)
             }
 
+            Constant.START_COUNT_DOWN_TIMER_CODE -> {
+                Log.d(kTag, "开始超时倒计时")
+                val time = SaveKeyValues.getValue(
+                    Constant.STAY_DD_TIMEOUT_KEY, Constant.DEFAULT_OVER_TIME
+                ) as String
+                //去掉时间的s
+                val timeValue = time.dropLast(1).toInt()
+                timeoutTimer = object : CountDownTimer(timeValue * 1000L, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        val tick = millisUntilFinished / 1000
+                        FloatingWindowService.weakReferenceHandler?.apply {
+                            val message = obtainMessage()
+                            message.what = Constant.TICK_TIME_CODE
+                            message.obj = tick
+                            sendMessage(message)
+                        }
+                    }
+
+                    override fun onFinish() {
+                        //如果倒计时结束，那么表明没有收到打卡成功的通知
+                        requireContext().backToMainActivity()
+                        "未监听到打卡通知，即将发送异常日志邮件，请注意查收".show(
+                            requireContext()
+                        )
+                        "".sendEmail(requireContext(), null, false)
+                    }
+                }
+                timeoutTimer?.start()
+            }
+
+            Constant.CANCEL_COUNT_DOWN_TIMER_CODE -> {
+                timeoutTimer?.cancel()
+                timeoutTimer = null
+                Log.d(kTag, "取消超时定时器，执行下一个任务")
+                weakReferenceHandler?.sendEmptyMessage(Constant.EXECUTE_NEXT_TASK_CODE)
+            }
+
             Constant.COMPLETED_ALL_TASK_CODE -> {
                 binding.tipsView.text = "当天所有任务已执行完毕"
                 binding.tipsView.setTextColor(R.color.ios_green.convertColor(requireContext()))
@@ -497,13 +486,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 dailyTaskHandler.removeCallbacks(dailyTaskRunnable)
                 countDownTimerService?.updateDailyTaskState()
             }
+
+            Constant.STOP_DAILY_TASK_CODE -> stopExecuteTask(true)
         }
         return true
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        EventBus.getDefault().unregister(this)
-        Log.d(kTag, "onDestroyView: 解注册EventBus")
     }
 }
