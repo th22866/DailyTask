@@ -46,26 +46,30 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/repeatTimeView"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_24"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:background="@drawable/bg_solid_layout_black_radius_8"
-                    android:drawablePadding="@dimen/dp_8"
-                    android:gravity="center"
+                    android:background="@drawable/bg_solid_layout_black_radius_4"
+                    android:drawablePadding="@dimen/dp_4"
                     android:paddingHorizontal="@dimen/dp_8"
+                    android:paddingVertical="2dp"
                     android:singleLine="true"
                     android:text="--秒后刷新每日任务"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_14"
+                    android:textSize="@dimen/sp_12"
                     app:drawableStartCompat="@drawable/ic_sand" />
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/executeTaskButton"
+                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_16"
-                android:src="@mipmap/ic_start" />
+                android:text="启动"
+                app:icon="@mipmap/ic_start"
+                app:iconTint="@color/ios_green"
+                app:strokeColor="@color/theme_color" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

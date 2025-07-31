@@ -281,7 +281,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         Log.d(kTag, "startExecuteTask: 开启周期任务Runnable")
         executeDailyTask()
         isTaskStarted = true
-        binding.executeTaskButton.setImageResource(R.mipmap.ic_stop)
+        binding.executeTaskButton.setIconResource(R.mipmap.ic_stop)
+        binding.executeTaskButton.setIconTintResource(R.color.red)
+        binding.executeTaskButton.text = "停止"
         if (isRemote) {
             "循环任务启动成功，请注意下次打卡时间".sendEmail(
                 requireContext(), "启动循环任务通知", false
@@ -295,7 +297,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         countDownTimerService?.cancelCountDown()
         isTaskStarted = false
         binding.repeatTimeView.text = "--秒后刷新每日任务"
-        binding.executeTaskButton.setImageResource(R.mipmap.ic_start)
+        binding.executeTaskButton.setIconResource(R.mipmap.ic_start)
+        binding.executeTaskButton.setIconTintResource(R.color.ios_green)
+        binding.executeTaskButton.text = "启动"
         binding.tipsView.text = ""
         dailyTaskAdapter.updateCurrentTaskState(-1)
         if (isRemote) {
