@@ -172,4 +172,9 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
             }
         }
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        onResume()
+    }
 }

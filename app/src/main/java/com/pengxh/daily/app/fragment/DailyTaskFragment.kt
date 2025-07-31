@@ -429,14 +429,14 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             Constant.START_TASK_CODE -> {
                 val index = msg.obj as Int
                 val task = taskBeans[index]
-                binding.tipsView.text = "即将执行第 ${index + 1} 个任务"
+                binding.tipsView.text = "准备执行第 ${index + 1} 个任务"
                 binding.tipsView.setTextColor(R.color.theme_color.convertColor(requireContext()))
 
                 val pair = task.diffCurrent()
                 dailyTaskAdapter.updateCurrentTaskState(index, pair.first)
                 val diff = pair.second
                 Log.d(kTag, "任务时间差是: $diff 秒")
-                "即将执行第 ${index + 1} 个任务，任务时间点是: ${task.time}".sendEmail(
+                "准备执行第 ${index + 1} 个任务，任务时间点是: ${task.time}".sendEmail(
                     requireContext(), "任务执行通知", false
                 )
                 countDownTimerService?.startCountDown(index + 1, diff)
@@ -467,9 +467,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                     override fun onFinish() {
                         //如果倒计时结束，那么表明没有收到打卡成功的通知
                         requireContext().backToMainActivity()
-                        "未监听到打卡通知，即将发送异常日志邮件，请注意查收".show(
-                            requireContext()
-                        )
+                        "未监听到打卡通知，发送异常日志邮件，请注意查收".show(requireContext())
                         "".sendEmail(requireContext(), null, false)
                     }
                 }
