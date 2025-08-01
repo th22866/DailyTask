@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.pengxh.daily.app.R
@@ -63,7 +62,7 @@ class DailyTaskAdapter(
             holder.setVisibility(R.id.actualTimeCardView, View.VISIBLE)
                 .setText(R.id.actualTimeView, actualTime)
                 .setTextColor(R.id.actualTimeView, R.color.theme_color.convertColor(context))
-                .setTextColor(R.id.taskTimeView, "#CCCCCC".toColorInt())
+                .setTextColor(R.id.taskTimeView, R.color.text_hint_color.convertColor(context))
             arrowView.animate().rotation(90f).setDuration(500).start()
         } else {
             holder.itemView.isSelected = false
