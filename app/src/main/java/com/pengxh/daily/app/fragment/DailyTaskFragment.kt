@@ -132,7 +132,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         DailyTaskApplication.get().sharedViewModel.addTaskCode.observe(viewLifecycleOwner) {
             if (it == 1) {
                 if (isTaskStarted) {
-                    "任务进行中，无法添加，请先取消当前任务".show(requireContext())
+                    "任务进行中，无法添加".show(requireContext())
                     return@observe
                 }
 
