@@ -54,10 +54,10 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tipsView"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-condensed"
+                    android:gravity="center_vertical"
                     android:hint="点击按钮开始执行任务"
                     android:singleLine="true"
                     android:textColor="@color/theme_color"

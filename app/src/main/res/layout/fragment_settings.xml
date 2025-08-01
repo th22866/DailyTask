@@ -32,8 +32,8 @@
                     android:textColor="@color/text_default_color"
                     android:textSize="@dimen/sp_16" />
 
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/checkBox"
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/emailSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"

@@ -133,7 +133,7 @@ class SettingsFragment : KotlinBaseFragment<FragmentSettingsBinding>(), Handler.
 
     override fun onResume() {
         super.onResume()
-        binding.checkBox.isChecked = EmailConfigKit.isEmailConfigured()
+        binding.emailSwitch.isChecked = EmailConfigKit.isEmailConfigured()
 
         binding.floatSwitch.isChecked = Settings.canDrawOverlays(requireContext())
         val serviceIntent = Intent(requireContext(), FloatingWindowService::class.java)
