@@ -54,9 +54,7 @@ fun Context.openApplication(needEmail: Boolean) {
         return
     }
 
-    FloatingWindowService.weakReferenceHandler?.apply {
-        sendEmptyMessage(Constant.SHOW_FLOATING_WINDOW_CODE)
-    }
+    FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.SHOW_FLOATING_WINDOW_CODE)
     /**跳转钉钉开始*****************************************/
     val resolveIntent = Intent(Intent.ACTION_MAIN, null).apply {
         addCategory(Intent.CATEGORY_LAUNCHER)

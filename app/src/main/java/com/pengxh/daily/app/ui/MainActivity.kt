@@ -136,9 +136,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
                 binding.rootView.visibility = View.VISIBLE
 
                 //恢复悬浮窗显示
-                FloatingWindowService.weakReferenceHandler?.apply {
-                    sendEmptyMessage(Constant.SHOW_FLOATING_WINDOW_CODE)
-                }
+                FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.SHOW_FLOATING_WINDOW_CODE)
             } else {
                 //隐藏状态栏显示
                 insetsController.hide(WindowInsetsCompat.Type.statusBars())
@@ -154,9 +152,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
                 binding.rootView.visibility = View.GONE
 
                 //隐藏悬浮窗显示
-                FloatingWindowService.weakReferenceHandler?.apply {
-                    sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
-                }
+                FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
             }
             return true
         }
@@ -167,9 +163,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
         super.onResume()
         if (binding.maskView.isVisible) {
             insetsController.hide(WindowInsetsCompat.Type.statusBars())
-            FloatingWindowService.weakReferenceHandler?.apply {
-                sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
-            }
+            FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
         }
     }
 

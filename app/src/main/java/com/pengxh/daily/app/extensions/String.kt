@@ -86,15 +86,17 @@ fun String.sendEmail(context: Context, title: String?, isTest: Boolean) {
         try {
             Transport.send(mime)
             if (isTest) {
-                EmailConfigActivity.weakReferenceHandler.sendEmptyMessage(Constant.SEND_EMAIL_SUCCESS_CODE)
+                EmailConfigActivity.weakReferenceHandler?.sendEmptyMessage(Constant.SEND_EMAIL_SUCCESS_CODE)
             }
         } catch (e: Exception) {
             e.printStackTrace()
             if (isTest) {
-                val message = EmailConfigActivity.weakReferenceHandler.obtainMessage()
-                message.what = Constant.SEND_EMAIL_FAILED_CODE
-                message.obj = e.message
-                EmailConfigActivity.weakReferenceHandler.sendMessage(message)
+                EmailConfigActivity.weakReferenceHandler?.let {
+                    val message = it.obtainMessage()
+                    message.what = Constant.SEND_EMAIL_FAILED_CODE
+                    message.obj = e.message
+                    it.sendMessage(message)
+                }
             }
         }
     }.start()

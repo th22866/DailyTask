@@ -24,7 +24,7 @@ import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 class EmailConfigActivity : KotlinBaseActivity<ActivityEmailConfigBinding>(), Handler.Callback {
 
     companion object {
-        lateinit var weakReferenceHandler: WeakReferenceHandler
+        var weakReferenceHandler: WeakReferenceHandler? = null
     }
 
     private val context = this

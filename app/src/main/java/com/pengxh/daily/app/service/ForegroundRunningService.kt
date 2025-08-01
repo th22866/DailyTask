@@ -36,8 +36,9 @@ class ForegroundRunningService : Service() {
         val name = "${resources.getString(R.string.app_name)}前台服务"
         val channel = NotificationChannel(
             "foreground_running_service_channel", name, NotificationManager.IMPORTANCE_HIGH
-        )
-        channel.description = "Channel for Foreground Running Service"
+        ).apply {
+            description = "Channel for Foreground Running Service"
+        }
         notificationManager.createNotificationChannel(channel)
         notificationBuilder.build().apply {
             notificationManager.notify(notificationId, this)

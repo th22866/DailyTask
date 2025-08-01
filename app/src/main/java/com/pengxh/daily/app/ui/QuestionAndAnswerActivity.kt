@@ -16,7 +16,6 @@ import com.pengxh.kt.lite.utils.HtmlRenderEngine
 import com.pengxh.kt.lite.widget.TitleBarView
 
 class QuestionAndAnswerActivity : KotlinBaseActivity<ActivityQuestionAndAnswerBinding>() {
-
     private val context = this
     private val gson by lazy { Gson() }
 
