@@ -436,7 +436,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 dailyTaskAdapter.updateCurrentTaskState(index, pair.first)
                 val diff = pair.second
                 Log.d(kTag, "任务时间差是: $diff 秒")
-                "准备执行第 ${index + 1} 个任务，任务时间点是: ${task.time}".sendEmail(
+                "准备执行第 ${index + 1} 个任务，任务时间点是: ${pair.first}".sendEmail(
                     requireContext(), "任务执行通知", false
                 )
                 countDownTimerService?.startCountDown(index + 1, diff)
