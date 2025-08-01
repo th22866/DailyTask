@@ -109,10 +109,10 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
         weakReferenceHandler = WeakReferenceHandler(this)
         taskBeans = DatabaseWrapper.loadAllTask()
         if (taskBeans.isEmpty()) {
-            binding.refreshView.visibility = View.GONE
+            binding.recyclerView.visibility = View.GONE
             binding.emptyView.visibility = View.VISIBLE
         } else {
-            binding.refreshView.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.VISIBLE
             binding.emptyView.visibility = View.GONE
         }
         dailyTaskAdapter = DailyTaskAdapter(requireContext(), taskBeans)
@@ -215,10 +215,10 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                             taskBeans.removeAt(adapterPosition)
                             dailyTaskAdapter.refresh(taskBeans)
                             if (taskBeans.isEmpty()) {
-                                binding.refreshView.visibility = View.GONE
+                                binding.recyclerView.visibility = View.GONE
                                 binding.emptyView.visibility = View.VISIBLE
                             } else {
-                                binding.refreshView.visibility = View.VISIBLE
+                                binding.recyclerView.visibility = View.VISIBLE
                                 binding.emptyView.visibility = View.GONE
                             }
                         } catch (e: IndexOutOfBoundsException) {
@@ -329,7 +329,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                 "任务时间点已存在".show(requireContext())
                 return@setOnClickListener
             }
-            binding.refreshView.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.VISIBLE
             binding.emptyView.visibility = View.GONE
             val bean = DailyTaskBean().apply {
                 this.time = time
@@ -361,7 +361,7 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
                             }
                             DatabaseWrapper.insert(task)
                         }
-                        binding.refreshView.visibility = View.VISIBLE
+                        binding.recyclerView.visibility = View.VISIBLE
                         binding.emptyView.visibility = View.GONE
                         taskBeans = DatabaseWrapper.loadAllTask()
                         dailyTaskAdapter.refresh(taskBeans)
