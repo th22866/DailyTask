@@ -384,7 +384,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             val currentDiffSeconds = diffSeconds.decrementAndGet()
             if (currentDiffSeconds > 0) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    binding.repeatTimeView.text = "${currentDiffSeconds.formatTime()}后刷新每日任务"
+                    binding.repeatTimeView.text = String.format(
+                        Locale.getDefault(), "%s后刷新每日任务", currentDiffSeconds.formatTime()
+                    )
                 }
                 repeatTaskHandler.postDelayed(this, 1000)
             } else {
@@ -429,7 +431,9 @@ class DailyTaskFragment : KotlinBaseFragment<FragmentDailyTaskBinding>(), Handle
             Constant.START_TASK_CODE -> {
                 val index = msg.obj as Int
                 val task = taskBeans[index]
-                binding.tipsView.text = "准备执行第 ${index + 1} 个任务"
+                binding.tipsView.text = String.format(
+                    Locale.getDefault(), "准备执行第 %d 个任务", index + 1
+                )
                 binding.tipsView.setTextColor(R.color.theme_color.convertColor(requireContext()))
 
                 val pair = task.diffCurrent()
