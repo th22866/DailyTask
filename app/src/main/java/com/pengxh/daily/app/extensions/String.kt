@@ -20,7 +20,6 @@ import javax.mail.internet.MimeMessage
 
 fun String.sendEmail(context: Context, title: String?, isTest: Boolean) {
     val config = EmailConfigKit.getConfig()
-
     if (config.inboxEmail.isEmpty()) {
         "邮箱地址为空".show(context)
         return
