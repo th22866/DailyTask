@@ -47,12 +47,13 @@
         android:visibility="gone">
 
         <TextClock
+            android:id="@+id/clockView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:fontFamily="@font/ds_digital"
             android:format24Hour="HH:mm:ss"
-            android:textColor="@color/white"
+            android:textColor="#B3FFFFFF"
             android:textSize="56sp" />
     </RelativeLayout>
 </RelativeLayout>

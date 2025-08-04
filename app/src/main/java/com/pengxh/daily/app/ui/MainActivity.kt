@@ -2,10 +2,13 @@ package com.pengxh.daily.app.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.ScaleAnimation
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -30,11 +33,13 @@ import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.extensions.setScreenBrightness
 import com.pengxh.kt.lite.utils.SaveKeyValues
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
+import java.util.Random
 
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     private val kTag = "MainActivity"
     private val fragmentPages = ArrayList<Fragment>()
+    private val clockAnimationHandler = Handler(Looper.getMainLooper())
     private var menuItem: MenuItem? = null
     private lateinit var insetsController: WindowInsetsControllerCompat
 
@@ -122,53 +127,95 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             if (binding.maskView.isVisible) {
-                //恢复状态栏显示
-                insetsController.show(WindowInsetsCompat.Type.statusBars())
-
-                //隐藏蒙层
-                binding.maskView.visibility = View.GONE
-                val invisibleAction = ScaleAnimation(1.0f, 1.0f, 1.0f, 0.0f)
-                invisibleAction.duration = 500
-                binding.maskView.startAnimation(invisibleAction)
-                window.setScreenBrightness(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE)
-
-                //显示任务界面
-                binding.rootView.visibility = View.VISIBLE
-
-                //恢复悬浮窗显示
-                FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.SHOW_FLOATING_WINDOW_CODE)
+                hideMaskView()
             } else {
-                //隐藏状态栏显示
-                insetsController.hide(WindowInsetsCompat.Type.statusBars())
-
-                //显示蒙层
-                binding.maskView.visibility = View.VISIBLE
-                val visibleAction = ScaleAnimation(1.0f, 1.0f, 0.0f, 1.0f)
-                visibleAction.duration = 500
-                binding.maskView.startAnimation(visibleAction)
-                window.setScreenBrightness(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_OFF)
-
-                //隐藏任务界面
-                binding.rootView.visibility = View.GONE
-
-                //隐藏悬浮窗显示
-                FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
+                showMaskView()
             }
             return true
         }
         return super.onKeyDown(keyCode, event)
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (binding.maskView.isVisible) {
-            insetsController.hide(WindowInsetsCompat.Type.statusBars())
-            FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
+    private var clockAnimationRunnable = object : Runnable {
+        override fun run() {
+            // 确保视图已经布局完成
+            if (binding.maskView.width == 0 || binding.maskView.height == 0) return
+
+            // 获取时钟控件尺寸
+            binding.clockView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            val clockWidth = binding.clockView.measuredWidth
+            val clockHeight = binding.clockView.measuredHeight
+
+            // 计算可移动范围
+            val maxX = binding.maskView.width - clockWidth
+            val maxY = binding.maskView.height - clockHeight
+
+            // 确保范围有效
+            if (maxX <= 0 || maxY <= 0) return
+
+            // 生成随机位置
+            val random = Random()
+            val newX = random.nextInt(maxX.coerceAtLeast(1))
+            val newY = random.nextInt(maxY.coerceAtLeast(1))
+
+            // 应用动画移动到新位置
+            binding.clockView.animate()
+                .x(newX.toFloat())
+                .y(newY.toFloat())
+                .setDuration(1000)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .start()
+
+            // 每30秒执行一次位置变换
+            clockAnimationHandler.postDelayed(this, 30000)
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        onResume()
+    /**
+     * 显示蒙层以及其它组件
+     * */
+    private fun showMaskView() {
+        //隐藏状态栏显示
+        insetsController.hide(WindowInsetsCompat.Type.statusBars())
+
+        //显示蒙层
+        binding.maskView.visibility = View.VISIBLE
+        val visibleAction = ScaleAnimation(1.0f, 1.0f, 0.0f, 1.0f)
+        visibleAction.duration = 500
+        binding.maskView.startAnimation(visibleAction)
+        window.setScreenBrightness(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_OFF)
+
+        //隐藏任务界面
+        binding.rootView.visibility = View.GONE
+
+        //隐藏悬浮窗显示
+        FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.HIDE_FLOATING_WINDOW_CODE)
+
+        //启动时钟位置变换动画
+        clockAnimationHandler.postDelayed(clockAnimationRunnable, 30000)
+    }
+
+    /**
+     * 隐藏蒙层以及其它组件
+     * */
+    private fun hideMaskView() {
+        //停止时钟动画
+        clockAnimationHandler.removeCallbacks(clockAnimationRunnable)
+
+        //恢复状态栏显示
+        insetsController.show(WindowInsetsCompat.Type.statusBars())
+
+        //隐藏蒙层
+        binding.maskView.visibility = View.GONE
+        val invisibleAction = ScaleAnimation(1.0f, 1.0f, 1.0f, 0.0f)
+        invisibleAction.duration = 500
+        binding.maskView.startAnimation(invisibleAction)
+        window.setScreenBrightness(WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE)
+
+        //显示任务界面
+        binding.rootView.visibility = View.VISIBLE
+
+        //恢复悬浮窗显示
+        FloatingWindowService.weakReferenceHandler?.sendEmptyMessage(Constant.SHOW_FLOATING_WINDOW_CODE)
     }
 }
