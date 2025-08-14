@@ -40,7 +40,7 @@ object Constant {
     const val START_DAILY_TASK_CODE = 2025030701
     const val STOP_DAILY_TASK_CODE = 2025030702
 
-    const val DING_DING = "com.alibaba.android.rimet" // 钉钉
+    const val DING_DING = "com.alibaba.android.rimet.zju" // 浙大钉
     const val WECHAT = "com.tencent.mm" // 微信
     const val WEWORK = "com.tencent.wework" // 企业微信
     const val QQ = "com.tencent.mobileqq" // QQ
