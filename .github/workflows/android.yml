@@ -24,3 +24,9 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+
+    - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.apk"
+          token: ${{ github.token }}
+          generateReleaseNotes: true
